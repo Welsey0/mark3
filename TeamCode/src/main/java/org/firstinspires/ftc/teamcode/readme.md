@@ -1,3 +1,4 @@
+> A Controller computes the action, a Service applies the action.
 ## TeamCode Module
 
 Welcome!
