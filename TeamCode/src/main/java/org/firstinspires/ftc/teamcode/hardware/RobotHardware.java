@@ -1,5 +1,8 @@
 package org.firstinspires.ftc.teamcode.hardware;
 
+import com.qualcomm.robotcore.hardware.HardwareMap;
+import org.firstinspires.ftc.teamcode.hardware.drive.DriveHardware;
+
 /**
  * Central hardware owner for the robot.
  *
@@ -12,4 +15,9 @@ package org.firstinspires.ftc.teamcode.hardware;
  * Keep direct FTC-specific access here and in the mechanism hardware classes.
  */
 public class RobotHardware {
+	public final DriveHardware drive = new DriveHardware();
+
+	public void init(HardwareMap hardwareMap) {
+		drive.init(hardwareMap);
+	}
 }

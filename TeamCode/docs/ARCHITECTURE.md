@@ -22,23 +22,31 @@ Top-level layout
 
 - hardware/
   - hardware wrappers that are *the only* classes that talk to `hardwareMap` and FTC SDK devices.
-  - e.g. `hardware/drive/DriveHardware.java` — initializes motors and exposes `setMotorPowers(...)`.
+  - e.g. `hardware/drive/DriveHardware.java` — initializes motors and exposes `DriveIO` methods.
+  - `hardware/RobotHardware.java` groups mechanism wrappers for simple robot construction.
 
 - subsystems/
-  - Own mechanism logic and state; call hardware wrappers to actuate motors.
-  - `DriveSubsystem` exposes `setDrivePower(vx, vy, omega)` and does the mecanum mixing.
+  - Own mechanism logic and state; call hardware interfaces to actuate outputs.
+  - `DriveSubsystem` depends on `DriveIO`, not concrete FTC motor classes.
+  - `DriveSubsystem.driveWithHeading(...)` implements Mark 2-equivalent field-centric transform and wheel mapping.
 
 - commands/
   - Small action objects that use subsystems and implement lifecycle methods.
-  - `TeleopDriveCommand` reads a `Gamepad` and calls `DriveSubsystem.setDrivePower(...)`.
+  - `TeleopDriveCommand` reads a `Gamepad`, applies configurable signs/deadband/scales, and calls `DriveSubsystem.driveWithHeading(...)`.
 
 Design notes and best practices
 
-- Keep hardwareMap usage inside `hardware/` only. Subsystems should accept hardware wrapper objects (or interfaces) in their constructors.
+- Keep hardwareMap usage inside `hardware/` only. Subsystems should accept hardware interfaces (`DriveIO`) in their constructors.
 - Commands should be stateless procedural objects that use subsystem APIs and declare their subsystem requirements.
 - The `CommandScheduler` is intentionally simple: it supports scheduling, cancellation, default commands, and periodic execution.
   - Do not add complex features (parallel groups, timeouts) until the team understands the basic flow.
 - Use `Constants` for any value that may change between builds or robots.
+
+Base OpMode framework
+
+- `framework/opmode/BaseOpMode` wraps iterative FTC lifecycle and runs the scheduler every loop.
+- `framework/opmode/BaseLinearOpMode` wraps linear lifecycle and runs the scheduler during active loops.
+- Concrete OpModes should only handle robot composition and telemetry, not command internals.
 
 Extending the framework
 
@@ -56,6 +64,10 @@ Testing tips
 Migration from Mark 2
 
 - This implementation intentionally uses the same motor names as Mark 2 (`frontLeft`, `backLeft`, `frontRight`, `backRight`) so that existing robot configuration files continue to work.
+- Drive transform and wheel mapping intentionally mirror Mark 2 `Modules/Drive.driveFromJoy(...)` math for functional equivalence:
+  - `x = dx*cos(h) + dy*sin(h)`
+  - `y = dy*cos(h) - dx*sin(h)`
+  - powers: `FL(y+x+r), FR(y-x-r), BL(y-x+r), BR(y+x-r)` with denominator normalization.
 - Use Mark 2 modules as reference for sensor names and behaviors, but keep Mark 3's subsystem and hardware wrappers small and well-documented.
 
 

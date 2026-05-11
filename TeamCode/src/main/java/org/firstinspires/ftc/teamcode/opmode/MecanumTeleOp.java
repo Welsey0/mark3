@@ -1,11 +1,9 @@
 package org.firstinspires.ftc.teamcode.opmode;
 
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import org.firstinspires.ftc.teamcode.commands.drive.TeleopDriveCommand;
-import org.firstinspires.ftc.teamcode.framework.command.CommandScheduler;
-import org.firstinspires.ftc.teamcode.hardware.drive.DriveHardware;
-import org.firstinspires.ftc.teamcode.subsystems.DriveSubsystem;
+import org.firstinspires.ftc.teamcode.framework.opmode.BaseOpMode;
+import org.firstinspires.ftc.teamcode.hardware.RobotHardware;
+import org.firstinspires.ftc.teamcode.robot.RobotContainer;
 
 /**
  * Simple TeleOp demonstrating the WPILib-like framework and basic mecanum drive.
@@ -18,42 +16,36 @@ import org.firstinspires.ftc.teamcode.subsystems.DriveSubsystem;
  * This OpMode is an example: keep it small and easy to read so you can adapt it.
  */
 @TeleOp(name = "Mecanum TeleOp (Mark3)")
-public class MecanumTeleOp extends OpMode {
+public class MecanumTeleOp extends BaseOpMode {
 
-    private DriveHardware driveHardware;
-    private DriveSubsystem driveSubsystem;
-    private TeleopDriveCommand teleopDriveCommand;
+    private RobotHardware robotHardware;
+    private RobotContainer robotContainer;
 
     @Override
-    public void init() {
+    protected void onInit() {
         telemetry.addData("Status", "Initializing drive hardware...");
         telemetry.update();
 
-        driveHardware = new DriveHardware();
-        driveHardware.init(hardwareMap);
+        robotHardware = new RobotHardware();
+        robotHardware.init(hardwareMap);
 
-        driveSubsystem = new DriveSubsystem(driveHardware);
-        teleopDriveCommand = new TeleopDriveCommand(driveSubsystem, gamepad1);
-
-        // Register as default command for drive
-        CommandScheduler.getInstance().setDefaultCommand(driveSubsystem, teleopDriveCommand);
+        robotContainer = new RobotContainer(robotHardware);
+        robotContainer.configureTeleop(gamepad1);
 
         telemetry.addData("Status", "Initialized");
         telemetry.update();
     }
 
     @Override
-    public void loop() {
-        // Run the framework scheduler - it will call our TeleopDriveCommand
-        CommandScheduler.getInstance().run();
+    protected void onLoopMode() {
+        telemetry.addData("Drive Mode", org.firstinspires.ftc.teamcode.robot.Constants.Drive.FIELD_CENTRIC_ENABLED ? "Field-centric" : "Robot-centric");
+        telemetry.addData("Use IMU Heading", org.firstinspires.ftc.teamcode.robot.Constants.Drive.USE_IMU_FOR_HEADING);
+        if (org.firstinspires.ftc.teamcode.robot.Constants.Drive.USE_IMU_FOR_HEADING && robotHardware != null) {
+            telemetry.addData("Heading(rad)", robotHardware.drive.getHeadingRadians());
+        }
 
         telemetry.addData("Status", "Running");
         telemetry.update();
-    }
-
-    @Override
-    public void stop() {
-        CommandScheduler.getInstance().cancelAll();
     }
 }
 

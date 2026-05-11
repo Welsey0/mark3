@@ -9,6 +9,7 @@ This folder contains a minimal, well-documented WPILib-inspired framework for FT
 Included components (minimal starter):
 
 - framework/command: Command, Subsystem, CommandScheduler
+- framework/opmode: BaseOpMode, BaseLinearOpMode
 - framework/util: small math helpers
 - hardware/drive: `DriveHardware` — wraps motors using Mark 2 motor names
 - subsystems/DriveSubsystem: mecanum mixing and forwarding to `DriveHardware`
@@ -23,7 +24,9 @@ Notable entries:
 - `Constants.Drive.FRONT_LEFT`, `BACK_LEFT`, `FRONT_RIGHT`, `BACK_RIGHT` - motor names
 - `Constants.Drive.JOYSTICK_DEADBAND` - joystick deadband used by drive
 - `Constants.Drive.TELEOP_POWER_SCALE` - global teleop power scale
+- `Constants.Drive.ROTATION_POWER_SCALE` - turn scale
 - `Constants.Drive.ZERO_POWER_BRAKE` - whether motors use BRAKE or FLOAT at zero power
+- `Constants.Drive.FIELD_CENTRIC_ENABLED` - toggles heading-aware Mark 2 style transform
 
 How to use this example:
 

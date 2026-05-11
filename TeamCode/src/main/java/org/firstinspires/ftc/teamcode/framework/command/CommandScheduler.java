@@ -50,6 +50,15 @@ public class CommandScheduler {
 	 * Run the scheduler. Call this periodically from your OpMode main loop.
 	 */
 	public synchronized void run() {
+		// Ensure defaults are running for free subsystems.
+		for (java.util.Map.Entry<Subsystem, Command> entry : defaultCommands.entrySet()) {
+			Subsystem subsystem = entry.getKey();
+			Command defaultCommand = entry.getValue();
+			if (!requirements.containsKey(subsystem) && defaultCommand != null && !scheduled.contains(defaultCommand)) {
+				schedule(defaultCommand);
+			}
+		}
+
 		// copy to avoid concurrent modification
 		java.util.List<Command> copy = new java.util.ArrayList<>(scheduled);
 		for (Command c : copy) {
@@ -80,6 +89,9 @@ public class CommandScheduler {
 		if (command == null) {
 			defaultCommands.remove(subsystem);
 		} else {
+			if (!command.getRequirements().contains(subsystem)) {
+				throw new IllegalArgumentException("Default command must require its subsystem");
+			}
 			defaultCommands.put(subsystem, command);
 		}
 	}

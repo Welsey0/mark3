@@ -14,9 +14,15 @@ Steps
 4. Press INIT and then PLAY. Use the left stick to translate (forward/back, strafe) and the right stick X to rotate.
 
 Notes
-- This example uses robot-centric control; it does not perform field-centric transformations.
+- The default configuration enables field-centric transform math to mirror Mark 2.
 - Hardware initialization is performed in `MecanumTeleOp.init()` using `DriveHardware`.
 - The command scheduler runs the `TeleopDriveCommand` as the default command for the drivetrain.
+
+Drive behavior configuration
+- `Constants.Drive.FIELD_CENTRIC_ENABLED`: enable/disable heading compensation.
+- `Constants.Drive.USE_IMU_FOR_HEADING`: read heading from IMU in `DriveHardware`.
+- `Constants.Drive.HEADING_OFFSET_RADIANS`: calibration offset if heading is rotated.
+- Input signs and scales are all in `Constants.Drive.*` to keep behavior tunable without code changes.
 
 If something doesn't work
 - Verify motor names in the RC configuration match the expected names.

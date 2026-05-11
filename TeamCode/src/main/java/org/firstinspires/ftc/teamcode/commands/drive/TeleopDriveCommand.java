@@ -8,6 +8,7 @@ import org.firstinspires.ftc.teamcode.robot.Constants;
 
 import java.util.Collections;
 import java.util.Set;
+import java.util.function.DoubleSupplier;
 
 /**
  * TeleOp drive command that reads a Gamepad and drives a mecanum drivetrain.
@@ -18,27 +19,37 @@ import java.util.Set;
 public class TeleopDriveCommand implements Command {
     private final DriveSubsystem drive;
     private final Gamepad gamepad;
+    private final DoubleSupplier headingRadiansSupplier;
 
     public TeleopDriveCommand(DriveSubsystem drive, Gamepad gamepad) {
+        this(drive, gamepad, () -> 0.0);
+    }
+
+    public TeleopDriveCommand(DriveSubsystem drive, Gamepad gamepad, DoubleSupplier headingRadiansSupplier) {
         this.drive = drive;
         this.gamepad = gamepad;
+        this.headingRadiansSupplier = headingRadiansSupplier;
     }
 
     @Override
     public void execute() {
-        // Read joysticks: FTC gamepad is +down for y, so negate to make forward +
-        double vx = -gamepad.left_stick_y;    // forward
-        double vy = gamepad.left_stick_x;     // strafe left
-        double omega = -gamepad.right_stick_x; // rotation
+        // Read joysticks using configurable signs so behavior is tunable in Constants.
+        double dx = gamepad.left_stick_x * Constants.Drive.STRAFE_INPUT_SIGN;
+        double dy = gamepad.left_stick_y * Constants.Drive.FORWARD_INPUT_SIGN;
+        double rx = gamepad.right_stick_x * Constants.Drive.TURN_INPUT_SIGN;
 
         // Apply deadband scaling from Constants
-        vx = org.firstinspires.ftc.teamcode.framework.util.MathUtil.applyDeadband(vx, Constants.Drive.JOYSTICK_DEADBAND);
-        vy = org.firstinspires.ftc.teamcode.framework.util.MathUtil.applyDeadband(vy, Constants.Drive.JOYSTICK_DEADBAND);
-        omega = org.firstinspires.ftc.teamcode.framework.util.MathUtil.applyDeadband(omega, Constants.Drive.JOYSTICK_DEADBAND);
+        dx = org.firstinspires.ftc.teamcode.framework.util.MathUtil.applyDeadband(dx, Constants.Drive.JOYSTICK_DEADBAND);
+        dy = org.firstinspires.ftc.teamcode.framework.util.MathUtil.applyDeadband(dy, Constants.Drive.JOYSTICK_DEADBAND);
+        rx = org.firstinspires.ftc.teamcode.framework.util.MathUtil.applyDeadband(rx, Constants.Drive.JOYSTICK_DEADBAND);
 
-        // Apply global teleop scale
-        double scale = Constants.Drive.TELEOP_POWER_SCALE;
-        drive.setDrivePower(vx * scale, vy * scale, omega * scale);
+        // Apply global teleop scales
+        dx *= Constants.Drive.TELEOP_POWER_SCALE;
+        dy *= Constants.Drive.TELEOP_POWER_SCALE;
+        rx *= Constants.Drive.ROTATION_POWER_SCALE;
+
+        double heading = headingRadiansSupplier.getAsDouble();
+        drive.driveWithHeading(dx, dy, rx, heading);
     }
 
     @Override
