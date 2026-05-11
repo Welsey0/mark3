@@ -1,45 +1,61 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
 import org.firstinspires.ftc.teamcode.framework.command.Subsystem;
+import org.firstinspires.ftc.teamcode.hardware.drive.DriveHardware;
+import org.firstinspires.ftc.teamcode.framework.util.MathUtil;
 
 /**
  * High-level drivetrain behavior.
  *
- * This subsystem should:
- * - manage drive state
- * - expose drive commands
- * - handle odometry or localization updates if needed
- * - own any drive-specific safety logic
- *
- * It should not know about button bindings or OpMode lifecycle.
- *
- * Minimal implementation: contains a simple API used by commands and
- * leaves actual hardware wiring to the hardware layer.
+ * This subsystem converts desired velocities into motor powers and
+ * delegates low-level control to DriveHardware.
  */
 public class DriveSubsystem implements Subsystem {
 
-	public DriveSubsystem() {
-		// construct internal state here (no hardware access in this minimal stub)
+	private final DriveHardware hardware;
+
+	public DriveSubsystem(DriveHardware hardware) {
+		this.hardware = hardware;
 	}
 
 	/**
-	 * Set the drive power using any coordinate system you prefer.
-	 * This is a minimal placeholder; in a real robot implementation this
-	 * would forward to a hardware wrapper (DriveHardware) that controls motors.
+	 * Set the desired drive power in robot-centric coordinates.
+	 * vx: forward (+)
+	 * vy: strafe left (+)
+	 * omega: clockwise rotation (+)
 	 *
-	 * @param vx forward velocity / power
-	 * @param vy strafe velocity / power
-	 * @param omega rotational velocity / power
+	 * Values expected in -1..1 range. Will be clipped automatically.
 	 */
 	public void setDrivePower(double vx, double vy, double omega) {
-		// TODO: forward to DriveHardware when available
+		// apply deadbands (value is configured in Constants)
+		double deadband = org.firstinspires.ftc.teamcode.robot.Constants.Drive.JOYSTICK_DEADBAND;
+		vx = MathUtil.applyDeadband(vx, deadband);
+		vy = MathUtil.applyDeadband(vy, deadband);
+		omega = MathUtil.applyDeadband(omega, deadband);
+
+		// Mecanum wheel mixing (matches Mark2 mapping)
+		double fl = vy + vx + omega; // frontLeft
+		double fr = vy - vx - omega; // frontRight
+		double bl = vy - vx + omega; // backLeft
+		double br = vy + vx - omega; // backRight
+
+		// normalize so no value exceeds 1
+		double max = Math.max(Math.max(Math.abs(fl), Math.abs(fr)), Math.max(Math.abs(bl), Math.abs(br)));
+		if (max > 1.0) {
+			fl /= max;
+			fr /= max;
+			bl /= max;
+			br /= max;
+		}
+
+		// forward to hardware
+		if (hardware != null) {
+			hardware.setMotorPowers(fl, fr, bl, br);
+		}
 	}
 
-	/**
-	 * Periodic update that might be called by the scheduler if desired.
-	 */
-	public void periodic() {
-		// update odometry or safety checks here
+	public void stop() {
+		if (hardware != null) hardware.stop();
 	}
 }
 

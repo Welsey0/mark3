@@ -47,7 +47,7 @@ public class DefaultDriveCommand implements Command {
 
 	@Override
 	public Set<org.firstinspires.ftc.teamcode.framework.command.Subsystem> getRequirements() {
-		return Collections.<org.firstinspires.ftc.teamcode.framework.command.Subsystem>singleton(drive);
+		return Collections.singleton(drive);
 	}
 }
 

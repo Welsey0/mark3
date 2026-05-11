@@ -23,4 +23,20 @@ package org.firstinspires.ftc.teamcode.robot;
  */
 public final class Constants {
     private Constants() {}
+
+    public static final class Drive {
+        // Use the same motor names as Mark 2 for compatibility with existing configs
+        public static final String FRONT_LEFT = "frontLeft";
+        public static final String BACK_LEFT = "backLeft";
+        public static final String FRONT_RIGHT = "frontRight";
+        public static final String BACK_RIGHT = "backRight";
+
+        // Teleop scaling (0..1)
+        public static final double TELEOP_POWER_SCALE = 1.0;
+
+        // Deadband for joystick input
+        public static final double JOYSTICK_DEADBAND = 0.05;
+        // Whether to set motors to BRAKE when power is zero
+        public static final boolean ZERO_POWER_BRAKE = true;
+    }
 }

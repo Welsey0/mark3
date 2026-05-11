@@ -8,8 +8,10 @@ public class RobotContainer {
 	public final org.firstinspires.ftc.teamcode.commands.drive.DefaultDriveCommand defaultDriveCommand;
 
 	public RobotContainer() {
-		// construct subsystems
-		this.driveSubsystem = new org.firstinspires.ftc.teamcode.subsystems.DriveSubsystem();
+		// construct subsystems with null hardware for cases where RobotContainer is
+		// used outside of an OpMode (tests, static contexts). Real OpModes should
+		// construct hardware and subsystems explicitly.
+		this.driveSubsystem = new org.firstinspires.ftc.teamcode.subsystems.DriveSubsystem(null);
 
 		// construct commands
 		this.defaultDriveCommand = new org.firstinspires.ftc.teamcode.commands.drive.DefaultDriveCommand(driveSubsystem);
