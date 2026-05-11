@@ -7,6 +7,8 @@ import org.firstinspires.ftc.teamcode.hardware.RobotHardware;
 import org.firstinspires.ftc.teamcode.subsystems.DriveSubsystem;
 
 public class RobotContainer {
+	// Keep this class as a small composition root only.
+	// Avoid putting drive math or autonomous logic here.
 	public final RobotHardware hardware;
 	public final DriveSubsystem driveSubsystem;
 
@@ -30,6 +32,8 @@ public class RobotContainer {
 
 	/**
 	 * Configure TeleOp bindings and register defaults.
+	 *
+	 * EDIT HERE: add or swap teleop commands for subsystems.
 	 */
 	public void configureTeleop(Gamepad gamepad1) {
 		if (hardware != null && Constants.Drive.USE_IMU_FOR_HEADING) {

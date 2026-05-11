@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.subsystems;
 
 import org.firstinspires.ftc.teamcode.framework.command.Subsystem;
 import org.firstinspires.ftc.teamcode.hardware.drive.DriveIO;
-import org.firstinspires.ftc.teamcode.framework.util.MathUtil;
 import org.firstinspires.ftc.teamcode.robot.Constants;
 
 /**
@@ -35,11 +34,20 @@ public class DriveSubsystem implements Subsystem {
 	 * Values expected in -1..1 range. Will be clipped automatically.
 	 */
 	public void driveWithHeading(double dx, double dy, double rx, double headingRadians) {
-		double deadband = Constants.Drive.JOYSTICK_DEADBAND;
-		dx = MathUtil.applyDeadband(dx, deadband);
-		dy = MathUtil.applyDeadband(dy, deadband);
-		rx = MathUtil.applyDeadband(rx, deadband);
+		double[] powers = calculateWheelPowers(dx, dy, rx, headingRadians);
 
+		if (io != null) {
+			io.setMotorPowers(powers[0], powers[1], powers[2], powers[3]);
+		}
+	}
+
+	/**
+	 * Pure math helper for mecanum power computation.
+	 *
+	 * Inputs are expected in -1..1 and should already be deadbanded/scaled by caller.
+	 * Returns powers ordered as: frontLeft, frontRight, backLeft, backRight.
+	 */
+	public double[] calculateWheelPowers(double dx, double dy, double rx, double headingRadians) {
 		double x;
 		double y;
 		if (Constants.Drive.FIELD_CENTRIC_ENABLED) {
@@ -60,9 +68,7 @@ public class DriveSubsystem implements Subsystem {
 		double backLeft = (y - x + rx) / denominator;
 		double backRight = (y + x - rx) / denominator;
 
-		if (io != null) {
-			io.setMotorPowers(frontLeft, frontRight, backLeft, backRight);
-		}
+		return new double[]{frontLeft, frontRight, backLeft, backRight};
 	}
 
 	/**

@@ -25,6 +25,9 @@ public final class Constants {
     private Constants() {}
 
     public static final class Drive {
+        // ========================= EDIT HERE FIRST =========================
+        // Most teams only need to change values in this section.
+
         // Use the same motor names as Mark 2 for compatibility with existing configs
         public static final String FRONT_LEFT = "frontLeft";
         public static final String BACK_LEFT = "backLeft";
@@ -60,6 +63,6 @@ public final class Constants {
         public static final boolean BACK_RIGHT_REVERSED = true;
 
         // If true, attempt to read yaw from IMU for heading-aware driving.
-        public static final boolean USE_IMU_FOR_HEADING = false;
+        public static final boolean USE_IMU_FOR_HEADING = true;
     }
 }

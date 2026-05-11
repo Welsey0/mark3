@@ -14,6 +14,8 @@ import org.firstinspires.ftc.teamcode.robot.RobotContainer;
  * - Runs the CommandScheduler in loop()
  *
  * This OpMode is an example: keep it small and easy to read so you can adapt it.
+ *
+ * EDIT HERE: this file should stay small. Use it to compose the robot and telemetry.
  */
 @TeleOp(name = "Mecanum TeleOp (Mark3)")
 public class MecanumTeleOp extends BaseOpMode {

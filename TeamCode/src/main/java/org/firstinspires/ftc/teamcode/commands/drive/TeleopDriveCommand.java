@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.commands.drive;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import org.firstinspires.ftc.teamcode.framework.command.Command;
 import org.firstinspires.ftc.teamcode.framework.command.Subsystem;
+import org.firstinspires.ftc.teamcode.framework.util.MathUtil;
 import org.firstinspires.ftc.teamcode.subsystems.DriveSubsystem;
 import org.firstinspires.ftc.teamcode.robot.Constants;
 
@@ -15,6 +16,8 @@ import java.util.function.DoubleSupplier;
  *
  * This command is intentionally simple and easy to read. It assumes robot-centric
  * control using left stick for translation and right stick X for rotation.
+ *
+ * EDIT HERE: Driver input shaping for TeleOp lives in this class.
  */
 public class TeleopDriveCommand implements Command {
     private final DriveSubsystem drive;
@@ -39,9 +42,9 @@ public class TeleopDriveCommand implements Command {
         double rx = gamepad.right_stick_x * Constants.Drive.TURN_INPUT_SIGN;
 
         // Apply deadband scaling from Constants
-        dx = org.firstinspires.ftc.teamcode.framework.util.MathUtil.applyDeadband(dx, Constants.Drive.JOYSTICK_DEADBAND);
-        dy = org.firstinspires.ftc.teamcode.framework.util.MathUtil.applyDeadband(dy, Constants.Drive.JOYSTICK_DEADBAND);
-        rx = org.firstinspires.ftc.teamcode.framework.util.MathUtil.applyDeadband(rx, Constants.Drive.JOYSTICK_DEADBAND);
+        dx = MathUtil.applyDeadband(dx, Constants.Drive.JOYSTICK_DEADBAND);
+        dy = MathUtil.applyDeadband(dy, Constants.Drive.JOYSTICK_DEADBAND);
+        rx = MathUtil.applyDeadband(rx, Constants.Drive.JOYSTICK_DEADBAND);
 
         // Apply global teleop scales
         dx *= Constants.Drive.TELEOP_POWER_SCALE;

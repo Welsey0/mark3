@@ -42,3 +42,5 @@ This is a starting point — expand subsystem behavior, add sensors, and build c
 
 For more technical design notes, see `ARCHITECTURE.md` in this folder.
 
+For day-to-day edits, start with `HOW_TO_CHANGE_THINGS.md`.
+
