@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.framework.command;
+package org.firstinspires.ftc.teamcode.framework;
 
 public class CommandScheduler {
 	// Singleton instance
@@ -12,14 +12,11 @@ public class CommandScheduler {
 	// Map each subsystem to the command that currently requires it
 	private final java.util.Map<Subsystem, Command> requirements = new java.util.HashMap<>();
 
-	// Default commands for subsystems (run when nothing else requires the subsystem)
-	private final java.util.Map<Subsystem, Command> defaultCommands = new java.util.HashMap<>();
-
 	private CommandScheduler() { }
 
 	/**
 	 * Schedule a command to run. If the command requires subsystems currently
-	 * owned by other commands, those commands will be cancelled.
+	 * owned by other commands, those commands will be canceled.
 	 */
 	public synchronized void schedule(Command cmd) {
 		if (cmd == null) return;
@@ -50,15 +47,6 @@ public class CommandScheduler {
 	 * Run the scheduler. Call this periodically from your OpMode main loop.
 	 */
 	public synchronized void run() {
-		// Ensure defaults are running for free subsystems.
-		for (java.util.Map.Entry<Subsystem, Command> entry : defaultCommands.entrySet()) {
-			Subsystem subsystem = entry.getKey();
-			Command defaultCommand = entry.getValue();
-			if (!requirements.containsKey(subsystem) && defaultCommand != null && !scheduled.contains(defaultCommand)) {
-				schedule(defaultCommand);
-			}
-		}
-
 		// copy to avoid concurrent modification
 		java.util.List<Command> copy = new java.util.ArrayList<>(scheduled);
 		for (Command c : copy) {
@@ -66,35 +54,16 @@ public class CommandScheduler {
 			if (c.isFinished()) {
 				c.end(false);
 				scheduled.remove(c);
-				// release requirements and schedule defaults
+				// release requirements
 				for (Subsystem s : c.getRequirements()) {
 					if (requirements.get(s) == c) {
 						requirements.remove(s);
-						Command def = defaultCommands.get(s);
-						if (def != null && !scheduled.contains(def)) {
-							schedule(def);
-						}
 					}
 				}
 			}
 		}
 	}
 
-	/**
-	 * Register a default command for a subsystem. A default command will be
-	 * scheduled automatically when the subsystem becomes free.
-	 */
-	public synchronized void setDefaultCommand(Subsystem subsystem, Command command) {
-		if (subsystem == null) return;
-		if (command == null) {
-			defaultCommands.remove(subsystem);
-		} else {
-			if (!command.getRequirements().contains(subsystem)) {
-				throw new IllegalArgumentException("Default command must require its subsystem");
-			}
-			defaultCommands.put(subsystem, command);
-		}
-	}
 
 	/**
 	 * Cancel all running commands and clear requirements.

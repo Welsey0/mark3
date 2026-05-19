@@ -1,15 +1,15 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
-import org.firstinspires.ftc.teamcode.framework.command.Subsystem;
-import org.firstinspires.ftc.teamcode.hardware.drive.DriveIO;
+import org.firstinspires.ftc.teamcode.framework.Subsystem;
+import org.firstinspires.ftc.teamcode.hardware.movement.DriveHardware;
 import org.firstinspires.ftc.teamcode.robot.Constants;
 
 /**
  * High-level drivetrain behavior.
- *
+ * <p>
  * This subsystem converts desired translation/rotation commands into mecanum
- * wheel powers and delegates low-level outputs to DriveIO.
- *
+ * wheel powers and delegates low-level outputs to DriveHardware.
+ * <p>
  * The field-centric math intentionally mirrors the Mark 2 implementation:
  * x = dx * cos(h) + dy * sin(h)
  * y = dy * cos(h) - dx * sin(h)
@@ -17,10 +17,10 @@ import org.firstinspires.ftc.teamcode.robot.Constants;
  */
 public class DriveSubsystem implements Subsystem {
 
-	private final DriveIO io;
+	private final DriveHardware hardware;
 
-	public DriveSubsystem(DriveIO io) {
-		this.io = io;
+	public DriveSubsystem(DriveHardware hardware) {
+		this.hardware = hardware;
 	}
 
 	/**
@@ -36,14 +36,14 @@ public class DriveSubsystem implements Subsystem {
 	public void driveWithHeading(double dx, double dy, double rx, double headingRadians) {
 		double[] powers = calculateWheelPowers(dx, dy, rx, headingRadians);
 
-		if (io != null) {
-			io.setMotorPowers(powers[0], powers[1], powers[2], powers[3]);
+		if (hardware != null) {
+			hardware.setMotorPowers(powers[0], powers[1], powers[2], powers[3]);
 		}
 	}
 
 	/**
 	 * Pure math helper for mecanum power computation.
-	 *
+	 * <p>
 	 * Inputs are expected in -1..1 and should already be deadbanded/scaled by caller.
 	 * Returns powers ordered as: frontLeft, frontRight, backLeft, backRight.
 	 */
@@ -61,7 +61,6 @@ public class DriveSubsystem implements Subsystem {
 			y = dy;
 		}
 
-		// Match Mark 2 normalization style exactly.
 		double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1.0);
 		double frontLeft = (y + x + rx) / denominator;
 		double frontRight = (y - x - rx) / denominator;
@@ -79,7 +78,7 @@ public class DriveSubsystem implements Subsystem {
 	}
 
 	public void stop() {
-		if (io != null) io.stop();
+		if (hardware != null) hardware.stop();
 	}
 }
 

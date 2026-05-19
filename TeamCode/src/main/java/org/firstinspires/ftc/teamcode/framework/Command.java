@@ -1,21 +1,20 @@
-package org.firstinspires.ftc.teamcode.framework.command;
+package org.firstinspires.ftc.teamcode.framework;
 
 /**
  * Represents one executable robot action.
- *
+ * <p>
  * A command should be small, reusable, and focused on one task.
  * Examples:
  * - drive forward
- * - move arm to position
  * - run intake until object detected
  * - follow an autonomous sequence
- *
+ * <p>
  * Typical lifecycle:
  * - initialize()
  * - execute()
  * - isFinished()
  * - end(interrupted)
- *
+ * <p>
  * Commands should not directly own robot-wide architecture.
  * They should depend on subsystems.
  */
@@ -38,7 +37,7 @@ public interface Command {
 
 	/**
 	 * Called once when the command ends or is interrupted.
-	 * @param interrupted true if the command was cancelled/interrupted
+	 * @param interrupted true if the command was canceled/interrupted
 	 */
 	default void end(boolean interrupted) { }
 

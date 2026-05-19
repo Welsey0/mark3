@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.framework.command;
+package org.firstinspires.ftc.teamcode.framework;
 
 /**
  * Represents a robot subsystem.

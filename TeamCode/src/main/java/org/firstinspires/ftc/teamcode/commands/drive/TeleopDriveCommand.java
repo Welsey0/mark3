@@ -1,9 +1,8 @@
 package org.firstinspires.ftc.teamcode.commands.drive;
 
 import com.qualcomm.robotcore.hardware.Gamepad;
-import org.firstinspires.ftc.teamcode.framework.command.Command;
-import org.firstinspires.ftc.teamcode.framework.command.Subsystem;
-import org.firstinspires.ftc.teamcode.framework.util.MathUtil;
+import org.firstinspires.ftc.teamcode.framework.Command;
+import org.firstinspires.ftc.teamcode.framework.Subsystem;
 import org.firstinspires.ftc.teamcode.subsystems.DriveSubsystem;
 import org.firstinspires.ftc.teamcode.robot.Constants;
 
@@ -12,12 +11,12 @@ import java.util.Set;
 import java.util.function.DoubleSupplier;
 
 /**
- * TeleOp drive command that reads a Gamepad and drives a mecanum drivetrain.
- *
+ * TeleOp drive command that reads a Gamepad and drives robot.
+ * <p>
  * This command is intentionally simple and easy to read. It assumes robot-centric
  * control using left stick for translation and right stick X for rotation.
- *
- * EDIT HERE: Driver input shaping for TeleOp lives in this class.
+ * <p>
+ * Driver input shaping for TeleOp lives in this class.
  */
 public class TeleopDriveCommand implements Command {
     private final DriveSubsystem drive;
@@ -42,14 +41,15 @@ public class TeleopDriveCommand implements Command {
         double rx = gamepad.right_stick_x * Constants.Drive.TURN_INPUT_SIGN;
 
         // Apply deadband scaling from Constants
-        dx = MathUtil.applyDeadband(dx, Constants.Drive.JOYSTICK_DEADBAND);
-        dy = MathUtil.applyDeadband(dy, Constants.Drive.JOYSTICK_DEADBAND);
-        rx = MathUtil.applyDeadband(rx, Constants.Drive.JOYSTICK_DEADBAND);
+        dx = applyDeadband(dx);
+        dy = applyDeadband(dy);
+        rx = applyDeadband(rx);
 
         // Apply global teleop scales
-        dx *= Constants.Drive.TELEOP_POWER_SCALE;
-        dy *= Constants.Drive.TELEOP_POWER_SCALE;
-        rx *= Constants.Drive.ROTATION_POWER_SCALE;
+        double scale = gamepad.right_bumper ? Constants.Drive.SLOW_MODE_SCALE : 1.0;
+        dx *= Constants.Drive.TELEOP_POWER_SCALE * scale;
+        dy *= Constants.Drive.TELEOP_POWER_SCALE * scale;
+        rx *= Constants.Drive.ROTATION_POWER_SCALE * scale;
 
         double heading = headingRadiansSupplier.getAsDouble();
         drive.driveWithHeading(dx, dy, rx, heading);
@@ -63,6 +63,12 @@ public class TeleopDriveCommand implements Command {
     @Override
     public Set<Subsystem> getRequirements() {
         return Collections.singleton(drive);
+    }
+
+    private static double applyDeadband(double value) {
+        double deadband = Constants.Drive.JOYSTICK_DEADZONE;
+        if (Math.abs(value) <= deadband) return 0.0;
+        return value > 0 ? (value - deadband) / (1.0 - deadband) : (value + deadband) / (1.0 - deadband);
     }
 }
 
