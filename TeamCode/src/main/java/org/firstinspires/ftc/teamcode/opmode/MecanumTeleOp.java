@@ -25,6 +25,9 @@ public class MecanumTeleOp extends OpMode {
         driveHardware = new DriveHardware();
         driveHardware.init(hardwareMap);
 
+        imuHardware = new IMUHardware();
+        imuHardware.init(hardwareMap);
+
         DriveSubsystem driveSubsystem = new DriveSubsystem(driveHardware);
         TeleopDriveCommand teleopDriveCommand = new TeleopDriveCommand(driveSubsystem, gamepad1, imuHardware::getHeadingRadians);
         CommandScheduler.getInstance().schedule(teleopDriveCommand);

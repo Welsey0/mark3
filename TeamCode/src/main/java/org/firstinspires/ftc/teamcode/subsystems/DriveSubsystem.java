@@ -42,7 +42,7 @@ public class DriveSubsystem implements Subsystem {
 	}
 
 	/**
-	 * Pure math helper for mecanum power computation.
+	 * Math helper for mecanum power computation.
 	 * <p>
 	 * Inputs are expected in -1..1 and should already be deadbanded/scaled by caller.
 	 * Returns powers ordered as: frontLeft, frontRight, backLeft, backRight.
@@ -71,10 +71,10 @@ public class DriveSubsystem implements Subsystem {
 	}
 
 	/**
-	 * Convenience overload for robot-centric control.
+	 * Convenience override for robot-centric control.
 	 */
-	public void setDrivePower(double vx, double vy, double omega) {
-		driveWithHeading(vx, vy, omega, 0.0);
+	public void driveWithoutHeading(double dx, double dy, double rx) {
+		driveWithHeading(dx, dy, rx, 0.0);
 	}
 
 	public void stop() {

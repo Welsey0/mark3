@@ -15,7 +15,7 @@ public interface Hardware {
     }
 
     /**
-     * Should freeze or stop motion in hardware. Can be called at any time.
+     * Should freeze or stop robot motion. Can be called at any time.
      */
     default void stop() {
     }

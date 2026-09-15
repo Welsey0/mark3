@@ -11,13 +11,9 @@ import java.util.Set;
 import java.util.function.DoubleSupplier;
 
 /**
- * TeleOp drive command that reads a Gamepad and drives robot.
- * <p>
- * This command is intentionally simple and easy to read. It assumes robot-centric
- * control using left stick for translation and right stick X for rotation.
- * <p>
- * Driver input shaping for TeleOp lives in this class.
+ * TeleOp drive command that reads a Gamepad and drives robot based on driver input.
  */
+
 public class TeleopDriveCommand implements Command {
     private final DriveSubsystem drive;
     private final Gamepad gamepad;
@@ -40,12 +36,12 @@ public class TeleopDriveCommand implements Command {
         double dy = gamepad.left_stick_y * Constants.Drive.FORWARD_INPUT_SIGN;
         double rx = gamepad.right_stick_x * Constants.Drive.TURN_INPUT_SIGN;
 
-        // Apply deadband scaling from Constants
+        // deadband scaling
         dx = applyDeadband(dx);
         dy = applyDeadband(dy);
         rx = applyDeadband(rx);
 
-        // Apply global teleop scales
+        // teleop power scaling
         double scale = gamepad.right_bumper ? Constants.Drive.SLOW_MODE_SCALE : 1.0;
         dx *= Constants.Drive.TELEOP_POWER_SCALE * scale;
         dy *= Constants.Drive.TELEOP_POWER_SCALE * scale;

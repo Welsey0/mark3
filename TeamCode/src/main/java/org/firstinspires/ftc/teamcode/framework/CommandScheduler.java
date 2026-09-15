@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.framework;
 
 public class CommandScheduler {
-	// Singleton instance
 	private static final CommandScheduler INSTANCE = new CommandScheduler();
 
 	public static CommandScheduler getInstance() { return INSTANCE; }
@@ -44,7 +43,7 @@ public class CommandScheduler {
 	}
 
 	/**
-	 * Run the scheduler. Call this periodically from your OpMode main loop.
+	 * Main function to run scheduler. call this repeatedly from your OpMode main loop.
 	 */
 	public synchronized void run() {
 		// copy to avoid concurrent modification

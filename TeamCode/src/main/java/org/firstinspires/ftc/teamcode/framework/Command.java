@@ -1,22 +1,8 @@
 package org.firstinspires.ftc.teamcode.framework;
 
 /**
- * Represents one executable robot action.
+ * Template for a single executable robot action.
  * <p>
- * A command should be small, reusable, and focused on one task.
- * Examples:
- * - drive forward
- * - run intake until object detected
- * - follow an autonomous sequence
- * <p>
- * Typical lifecycle:
- * - initialize()
- * - execute()
- * - isFinished()
- * - end(interrupted)
- * <p>
- * Commands should not directly own robot-wide architecture.
- * They should depend on subsystems.
  */
 public interface Command {
 

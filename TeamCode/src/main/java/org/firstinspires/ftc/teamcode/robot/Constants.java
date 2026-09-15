@@ -10,10 +10,10 @@ public final class Constants {
     private Constants() {}
 
     public static final class Drive {
-        public static final String FRONT_LEFT = "frontLeft";
-        public static final String BACK_LEFT = "backLeft";
-        public static final String FRONT_RIGHT = "frontRight";
-        public static final String BACK_RIGHT = "backRight";
+        public static final String FRONT_LEFT = "FL";
+        public static final String BACK_LEFT = "BL";
+        public static final String FRONT_RIGHT = "FR";
+        public static final String BACK_RIGHT = "BR";
 
         // Scaling of drive speed in Teleop
         public static final double TELEOP_POWER_SCALE = 1.0;
@@ -29,7 +29,7 @@ public final class Constants {
         public static final double TURN_INPUT_SIGN = -1.0;
 
         // Field-centric drive
-        public static final boolean FIELD_CENTRIC_ENABLED = true;
+        public static final boolean FIELD_CENTRIC_ENABLED = false;
         public static final double HEADING_OFFSET_RADIANS = 0.0;
 
         // Whether to set motors to BRAKE when power is zero
