@@ -20,7 +20,7 @@ public class IMUHardware implements Hardware {
     /**
      * Return heading in radians if IMU is available; otherwise returns 0.
      */
-    public double getHeadingRadians() {
+    public double getHeading() {
         if (imu == null) return 0.0;
         return imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
     }

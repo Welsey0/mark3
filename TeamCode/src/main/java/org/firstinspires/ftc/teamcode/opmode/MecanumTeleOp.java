@@ -29,7 +29,7 @@ public class MecanumTeleOp extends OpMode {
         imuHardware.init(hardwareMap);
 
         DriveSubsystem driveSubsystem = new DriveSubsystem(driveHardware);
-        TeleopDriveCommand teleopDriveCommand = new TeleopDriveCommand(driveSubsystem, gamepad1, imuHardware::getHeadingRadians);
+        TeleopDriveCommand teleopDriveCommand = new TeleopDriveCommand(driveSubsystem, gamepad1, imuHardware::getHeading);
         CommandScheduler.getInstance().schedule(teleopDriveCommand);
 
         telemetry.addData("Status", "Initialized");
@@ -42,7 +42,7 @@ public class MecanumTeleOp extends OpMode {
         telemetry.addData("Drive Mode", org.firstinspires.ftc.teamcode.robot.Constants.Drive.FIELD_CENTRIC_ENABLED ? "Field-centric" : "Robot-centric");
         telemetry.addData("Slow Mode", gamepad1.right_bumper ? "ON" : "OFF");
         if (driveHardware != null) {
-            telemetry.addData("Heading(rad)", imuHardware.getHeadingRadians());
+            telemetry.addData("Heading(rad)", imuHardware.getHeading());
         }
         telemetry.addData("Status", "Running");
         telemetry.update();

@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.robot.Constants;
 /**
  * Hardware wrapper for the drivetrain.
  * <p>
- * Owns the raw FTC devices for driving and exposes a minimal API for
+ * Owns the raw FTC devices for driving and exposes an API for
  * setting motor powers. This keeps direct HardwareMap calls in one place.
  */
 public class DriveHardware implements Hardware {

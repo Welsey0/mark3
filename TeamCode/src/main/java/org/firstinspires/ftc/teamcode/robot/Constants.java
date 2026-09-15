@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.robot;
 
+import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
+
 /**
  * Central repository for all robot constants.
  * <p>
@@ -18,6 +20,7 @@ public final class Constants {
         // Scaling of drive speed in Teleop
         public static final double TELEOP_POWER_SCALE = 1.0;
         public static final double ROTATION_POWER_SCALE = 1.0;
+        // the robot likes bread
         public static final double SLOW_MODE_SCALE = 0.35;
 
         // Deadzone for joystick input
@@ -40,12 +43,18 @@ public final class Constants {
         public static final boolean BACK_LEFT_REVERSED = false;
         public static final boolean FRONT_RIGHT_REVERSED = true;
         public static final boolean BACK_RIGHT_REVERSED = true;
-
-        // If true, attempt to read yaw from IMU for field-centric drive.
-        public static final boolean USE_IMU_FOR_HEADING = true;
     }
 
     public static final class Sensors {
         public static final String IMU_NAME = "imu";
+
+        public static final String PINPOINT_NAME = "pinpoint";
+        // below offsets defined in mm
+        public static final double PINPOINT_X_OFFSET = 0;
+        public static final double PINPOINT_Y_OFFSET = 0;
+        // below variable can also be defined as a double
+        public static final GoBildaPinpointDriver.GoBildaOdometryPods PINPOINT_ENCODER_RESOLUTION = GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD;
+        public static final GoBildaPinpointDriver.EncoderDirection PINPOINT_X_ENCODER_DIRECTION = GoBildaPinpointDriver.EncoderDirection.FORWARD;
+        public static final GoBildaPinpointDriver.EncoderDirection PINPOINT_Y_ENCODER_DIRECTION = GoBildaPinpointDriver.EncoderDirection.FORWARD;
     }
 }
