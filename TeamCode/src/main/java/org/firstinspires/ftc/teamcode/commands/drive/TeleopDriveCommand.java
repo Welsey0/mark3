@@ -5,6 +5,7 @@ import org.firstinspires.ftc.teamcode.framework.Command;
 import org.firstinspires.ftc.teamcode.framework.Subsystem;
 import org.firstinspires.ftc.teamcode.subsystems.DriveSubsystem;
 import org.firstinspires.ftc.teamcode.robot.Constants;
+import org.firstinspires.ftc.teamcode.subsystems.ShooterSubsystem;
 
 import java.util.Collections;
 import java.util.Set;
@@ -18,23 +19,27 @@ public class TeleopDriveCommand implements Command {
     private final DriveSubsystem drive;
     private final Gamepad gamepad;
     private final DoubleSupplier headingRadiansSupplier;
+    private final ShooterSubsystem shooter;
 
-    public TeleopDriveCommand(DriveSubsystem drive, Gamepad gamepad) {
-        this(drive, gamepad, () -> 0.0);
+    public TeleopDriveCommand(DriveSubsystem drive, Gamepad gamepad, ShooterSubsystem shooter) {
+        this(drive, gamepad, () -> 0.0, shooter);
     }
 
-    public TeleopDriveCommand(DriveSubsystem drive, Gamepad gamepad, DoubleSupplier headingRadiansSupplier) {
+    public TeleopDriveCommand(DriveSubsystem drive, Gamepad gamepad, DoubleSupplier headingRadiansSupplier, ShooterSubsystem shooter) {
         this.drive = drive;
         this.gamepad = gamepad;
         this.headingRadiansSupplier = headingRadiansSupplier;
+        this.shooter = shooter;
     }
 
     @Override
     public void execute() {
         // Read joysticks using configurable signs so behavior is tunable in Constants.
-        double dx = gamepad.left_stick_x * Constants.Drive.STRAFE_INPUT_SIGN;
+        double dx = gamepad.right_stick_x * Constants.Drive.STRAFE_INPUT_SIGN;
         double dy = gamepad.left_stick_y * Constants.Drive.FORWARD_INPUT_SIGN;
-        double rx = gamepad.right_stick_x * Constants.Drive.TURN_INPUT_SIGN;
+        double rx = gamepad.left_stick_x * Constants.Drive.TURN_INPUT_SIGN;
+        double st = gamepad.right_trigger * Constants.Shooter.INPUT_SIGN;
+        double sb = gamepad.left_trigger * Constants.Shooter.INPUT_SIGN;
 
         // deadband scaling
         dx = applyDeadband(dx);
@@ -46,9 +51,13 @@ public class TeleopDriveCommand implements Command {
         dx *= Constants.Drive.TELEOP_POWER_SCALE * scale;
         dy *= Constants.Drive.TELEOP_POWER_SCALE * scale;
         rx *= Constants.Drive.ROTATION_POWER_SCALE * scale;
+        st *= Constants.Shooter.POWER_SCALE * scale;
+        sb *= Constants.Shooter.POWER_SCALE * scale;
+
 
         double heading = headingRadiansSupplier.getAsDouble();
         drive.driveWithHeading(dx, dy, rx, heading);
+        shooter.setPower(st, sb);
     }
 
     @Override

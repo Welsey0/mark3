@@ -27,8 +27,8 @@ public final class Constants {
         public static final double JOYSTICK_DEADZONE = 0.05;
 
         // Input sign conventions for joystick input. Should probably never change.
-        public static final double FORWARD_INPUT_SIGN = -1.0; // left_stick_y is inverted in FTC
-        public static final double STRAFE_INPUT_SIGN = 1.0;
+        public static final double FORWARD_INPUT_SIGN = -1.0;
+        public static final double STRAFE_INPUT_SIGN = -1.0;
         public static final double TURN_INPUT_SIGN = -1.0;
 
         // Field-centric drive
@@ -43,6 +43,17 @@ public final class Constants {
         public static final boolean BACK_LEFT_REVERSED = false;
         public static final boolean FRONT_RIGHT_REVERSED = true;
         public static final boolean BACK_RIGHT_REVERSED = true;
+    }
+
+    public static final class Shooter {
+        public static final String TOP = "shooterTop";
+        public static final String BOTTOM = "shooterBottom";
+        public static final boolean TOP_REVERSED = false;
+        public static final boolean BOTTOM_REVERSED = false;
+        public static final boolean ZERO_POWER_BRAKE = false;
+        public static final double INPUT_SIGN = 1.0;
+        public static final double POWER_SCALE = 1.0;
+
     }
 
     public static final class Sensors {

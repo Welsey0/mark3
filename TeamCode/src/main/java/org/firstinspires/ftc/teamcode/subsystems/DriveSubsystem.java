@@ -9,11 +9,6 @@ import org.firstinspires.ftc.teamcode.robot.Constants;
  * <p>
  * This subsystem converts desired translation/rotation commands into mecanum
  * wheel powers and delegates low-level outputs to DriveHardware.
- * <p>
- * The field-centric math intentionally mirrors the Mark 2 implementation:
- * x = dx * cos(h) + dy * sin(h)
- * y = dy * cos(h) - dx * sin(h)
- * wheel mapping: FL(y+x+r), FR(y-x-r), BL(y-x+r), BR(y+x-r)
  */
 public class DriveSubsystem implements Subsystem {
 

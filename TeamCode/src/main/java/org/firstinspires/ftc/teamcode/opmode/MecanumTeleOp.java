@@ -5,8 +5,11 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.commands.drive.TeleopDriveCommand;
 import org.firstinspires.ftc.teamcode.framework.CommandScheduler;
 import org.firstinspires.ftc.teamcode.hardware.movement.DriveHardware;
+import org.firstinspires.ftc.teamcode.hardware.movement.ShooterHardware;
 import org.firstinspires.ftc.teamcode.hardware.sensors.IMUHardware;
+import org.firstinspires.ftc.teamcode.robot.Constants;
 import org.firstinspires.ftc.teamcode.subsystems.DriveSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.ShooterSubsystem;
 
 /**
  * Demonstration OpMode implementing basic mecanum drive.
@@ -16,6 +19,7 @@ public class MecanumTeleOp extends OpMode {
 
     private DriveHardware driveHardware;
     private IMUHardware imuHardware;
+    private ShooterHardware shooterHardware;
 
     @Override
     public void init() {
@@ -28,8 +32,12 @@ public class MecanumTeleOp extends OpMode {
         imuHardware = new IMUHardware();
         imuHardware.init(hardwareMap);
 
+        shooterHardware = new ShooterHardware();
+        shooterHardware.init(hardwareMap);
+
+        ShooterSubsystem shooterSubsystem = new ShooterSubsystem(shooterHardware);
         DriveSubsystem driveSubsystem = new DriveSubsystem(driveHardware);
-        TeleopDriveCommand teleopDriveCommand = new TeleopDriveCommand(driveSubsystem, gamepad1, imuHardware::getHeading);
+        TeleopDriveCommand teleopDriveCommand = new TeleopDriveCommand(driveSubsystem, gamepad1, imuHardware::getHeading, shooterSubsystem);
         CommandScheduler.getInstance().schedule(teleopDriveCommand);
 
         telemetry.addData("Status", "Initialized");
