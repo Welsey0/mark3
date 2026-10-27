@@ -5,8 +5,8 @@ import org.firstinspires.ftc.teamcode.framework.Command;
 import org.firstinspires.ftc.teamcode.framework.Subsystem;
 import org.firstinspires.ftc.teamcode.subsystems.DriveSubsystem;
 import org.firstinspires.ftc.teamcode.robot.Constants;
+import org.firstinspires.ftc.teamcode.subsystems.PositionSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.ShooterSubsystem;
-
 import java.util.Collections;
 import java.util.Set;
 import java.util.function.DoubleSupplier;
@@ -18,17 +18,13 @@ import java.util.function.DoubleSupplier;
 public class TeleopDriveCommand implements Command {
     private final DriveSubsystem drive;
     private final Gamepad gamepad;
-    private final DoubleSupplier headingRadiansSupplier;
+    private final PositionSubsystem position;
     private final ShooterSubsystem shooter;
 
-    public TeleopDriveCommand(DriveSubsystem drive, Gamepad gamepad, ShooterSubsystem shooter) {
-        this(drive, gamepad, () -> 0.0, shooter);
-    }
-
-    public TeleopDriveCommand(DriveSubsystem drive, Gamepad gamepad, DoubleSupplier headingRadiansSupplier, ShooterSubsystem shooter) {
+    public TeleopDriveCommand(DriveSubsystem drive, Gamepad gamepad, PositionSubsystem position, ShooterSubsystem shooter) {
         this.drive = drive;
         this.gamepad = gamepad;
-        this.headingRadiansSupplier = headingRadiansSupplier;
+        this.position = position;
         this.shooter = shooter;
     }
 
@@ -47,7 +43,7 @@ public class TeleopDriveCommand implements Command {
         rx = applyDeadband(rx);
 
         // teleop power scaling
-        double scale = gamepad.right_bumper ? Constants.Drive.SLOW_MODE_SCALE : 1.0;
+        double scale = gamepad.left_bumper ? Constants.Drive.SLOW_MODE_SCALE : 1.0;
         dx *= Constants.Drive.TELEOP_POWER_SCALE * scale;
         dy *= Constants.Drive.TELEOP_POWER_SCALE * scale;
         rx *= Constants.Drive.ROTATION_POWER_SCALE * scale;
@@ -55,7 +51,7 @@ public class TeleopDriveCommand implements Command {
         sb *= Constants.Shooter.POWER_SCALE * scale;
 
 
-        double heading = headingRadiansSupplier.getAsDouble();
+        double heading = position.getHeading();
         drive.driveWithHeading(dx, dy, rx, heading);
         shooter.setPower(st, sb);
     }

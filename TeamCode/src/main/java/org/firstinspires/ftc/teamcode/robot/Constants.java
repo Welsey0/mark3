@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.robot;
 
 import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 
 /**
  * Central repository for all robot constants.
@@ -58,6 +59,10 @@ public final class Constants {
 
     public static final class Sensors {
         public static final String IMU_NAME = "imu";
+        public static final RevHubOrientationOnRobot HUB_ORIENTATION = new RevHubOrientationOnRobot(
+                RevHubOrientationOnRobot.LogoFacingDirection.LEFT,
+                RevHubOrientationOnRobot.UsbFacingDirection.UP
+        );
 
         public static final String PINPOINT_NAME = "pinpoint";
         // below offsets defined in mm

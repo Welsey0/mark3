@@ -7,12 +7,17 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 
 public class IMUHardware implements Hardware {
-    private IMU imu;
+    public IMU imu;
 
     @Override
     public void init(HardwareMap hardwareMap) {
         try {
             imu = hardwareMap.get(IMU.class, Constants.Sensors.IMU_NAME);
+            IMU.Parameters IMUparameters;
+            IMUparameters = new IMU.Parameters(
+                    Constants.Sensors.HUB_ORIENTATION
+            );
+            imu.initialize(IMUparameters);
         } catch (RuntimeException ignored) {
             imu = null;
         }
