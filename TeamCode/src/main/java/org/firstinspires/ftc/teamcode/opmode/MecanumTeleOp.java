@@ -2,66 +2,75 @@ package org.firstinspires.ftc.teamcode.opmode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import org.firstinspires.ftc.teamcode.commands.drive.TeleopDriveCommand;
-import org.firstinspires.ftc.teamcode.framework.CommandScheduler;
-import org.firstinspires.ftc.teamcode.hardware.movement.DriveHardware;
-import org.firstinspires.ftc.teamcode.hardware.movement.ShooterHardware;
-import org.firstinspires.ftc.teamcode.hardware.sensors.IMUHardware;
-import org.firstinspires.ftc.teamcode.hardware.sensors.PinpointHardware;
+import org.firstinspires.ftc.teamcode.framework.input.GamepadInput;
 import org.firstinspires.ftc.teamcode.robot.Constants;
-import org.firstinspires.ftc.teamcode.subsystems.DriveSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.PositionSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.ShooterSubsystem;
+import org.firstinspires.ftc.teamcode.robot.RobotContext;
 
 /**
  * Demonstration OpMode implementing basic mecanum drive.
  */
 @TeleOp(name = "Mecanum TeleOp (Mark3)")
 public class MecanumTeleOp extends OpMode {
-
-    private DriveHardware driveHardware;
-    private IMUHardware imuHardware;
-    private ShooterHardware shooterHardware;
-    private PinpointHardware pinpointHardware;
+    private RobotContext robot;
+    private final GamepadInput.AnalogBinding strafe = GamepadInput.axis(
+            GamepadInput.StickAxis.RIGHT_X);
+    private final GamepadInput.AnalogBinding forward = GamepadInput.axis(
+            GamepadInput.StickAxis.LEFT_Y);
+    private final GamepadInput.AnalogBinding turn = GamepadInput.axis(
+            GamepadInput.StickAxis.LEFT_X);
+    private final GamepadInput.AnalogBinding shooterTop = GamepadInput.trigger(
+            GamepadInput.Trigger.RIGHT);
+    private final GamepadInput.AnalogBinding shooterBottom = GamepadInput.trigger(
+            GamepadInput.Trigger.LEFT);
+    private final GamepadInput.ActionBinding slowMode = GamepadInput.hold(
+            GamepadInput.Button.LEFT_BUMPER);
 
     @Override
     public void init() {
-        telemetry.addData("Status", "Initializing drive hardware...");
-        telemetry.update();
-
-        driveHardware = new DriveHardware();
-        driveHardware.init(hardwareMap);
-
-        imuHardware = new IMUHardware();
-        imuHardware.init(hardwareMap);
-
-        pinpointHardware = new PinpointHardware();
-        pinpointHardware.init(hardwareMap);
-
-        shooterHardware = new ShooterHardware();
-        shooterHardware.init(hardwareMap);
-
-        PositionSubsystem positionSubsystem = new PositionSubsystem(imuHardware, pinpointHardware);
-        ShooterSubsystem shooterSubsystem = new ShooterSubsystem(shooterHardware);
-        DriveSubsystem driveSubsystem = new DriveSubsystem(driveHardware);
-        TeleopDriveCommand teleopDriveCommand = new TeleopDriveCommand(driveSubsystem, gamepad1, positionSubsystem, shooterSubsystem);
-        CommandScheduler.getInstance().schedule(teleopDriveCommand);
-
-        telemetry.addData("Status", "Initialized");
-        telemetry.update();
+        robot = RobotContext.builder(hardwareMap, telemetry)
+                .withDrive()
+                .withPosition(true, false)
+                .withShooter()
+                .build();
+        robot.init();
     }
 
     @Override
     public void loop() {
-        CommandScheduler.getInstance().run();
-        telemetry.addData("Drive Mode", org.firstinspires.ftc.teamcode.robot.Constants.Drive.FIELD_CENTRIC_ENABLED ? "Field-centric" : "Robot-centric");
-        telemetry.addData("Slow Mode", gamepad1.left_bumper ? "ON" : "OFF");
-        telemetry.addData("Status", "Running");
-        telemetry.update();
+        if (robot != null) {
+            double dx = applyDeadband(strafe.value(gamepad1) * Constants.Drive.STRAFE_INPUT_SIGN);
+            double dy = applyDeadband(forward.value(gamepad1) * Constants.Drive.FORWARD_INPUT_SIGN);
+            double rx = applyDeadband(turn.value(gamepad1) * Constants.Drive.TURN_INPUT_SIGN);
+            double top = shooterTop.value(gamepad1) * Constants.Shooter.INPUT_SIGN;
+            double bottom = shooterBottom.value(gamepad1) * Constants.Shooter.INPUT_SIGN;
+            boolean slowModeActive = slowMode.active(gamepad1);
+
+            robot.drive().driveWithHeading(
+                    dx * Constants.Drive.TELEOP_POWER_SCALE,
+                    dy * Constants.Drive.TELEOP_POWER_SCALE,
+                    rx * Constants.Drive.ROTATION_POWER_SCALE,
+                    robot.position().getHeading(),
+                    slowModeActive
+            );
+            robot.shooter().setPower(
+                    top * Constants.Shooter.POWER_SCALE,
+                    bottom * Constants.Shooter.POWER_SCALE);
+            robot.periodic();
+        }
     }
 
     @Override
     public void stop() {
-        CommandScheduler.getInstance().cancelAll();
+        if (robot != null) {
+            robot.stop();
+        }
+    }
+
+    private static double applyDeadband(double value) {
+        double deadband = Constants.Drive.JOYSTICK_DEADZONE;
+        if (Math.abs(value) <= deadband) return 0.0;
+        return value > 0
+                ? (value - deadband) / (1.0 - deadband)
+                : (value + deadband) / (1.0 - deadband);
     }
 }

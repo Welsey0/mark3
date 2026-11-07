@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
 import org.firstinspires.ftc.teamcode.framework.Subsystem;
+import org.firstinspires.ftc.teamcode.framework.RobotInitializationException;
 import org.firstinspires.ftc.teamcode.hardware.movement.DriveHardware;
 import org.firstinspires.ftc.teamcode.robot.Constants;
 
@@ -15,6 +16,9 @@ public class DriveSubsystem implements Subsystem {
 	private final DriveHardware hardware;
 
 	public DriveSubsystem(DriveHardware hardware) {
+		if (hardware == null) {
+			throw new RobotInitializationException("DriveSubsystem", "DriveHardware is null");
+		}
 		this.hardware = hardware;
 	}
 
@@ -34,6 +38,16 @@ public class DriveSubsystem implements Subsystem {
 		if (hardware != null) {
 			hardware.setMotorPowers(powers[0], powers[1], powers[2], powers[3]);
 		}
+	}
+
+	/**
+	 * Drive with the configured slow-mode scaling applied by the drivetrain.
+	 * The opmode supplies the already-remapped action state.
+	 */
+	public void driveWithHeading(double dx, double dy, double rx,
+	                             double headingRadians, boolean slowMode) {
+		double scale = slowMode ? Constants.Drive.SLOW_MODE_SCALE : 1.0;
+		driveWithHeading(dx * scale, dy * scale, rx * scale, headingRadians);
 	}
 
 	/**
@@ -76,4 +90,3 @@ public class DriveSubsystem implements Subsystem {
 		if (hardware != null) hardware.stop();
 	}
 }
-

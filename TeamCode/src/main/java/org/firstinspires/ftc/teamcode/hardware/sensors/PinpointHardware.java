@@ -6,20 +6,29 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 import org.firstinspires.ftc.teamcode.framework.Hardware;
+import org.firstinspires.ftc.teamcode.framework.RobotInitializationException;
 import org.firstinspires.ftc.teamcode.robot.Constants;
 
 public class PinpointHardware implements Hardware {
     public GoBildaPinpointDriver pinpoint;
 
     public void init(HardwareMap hardwareMap) {
-        pinpoint = hardwareMap.get(GoBildaPinpointDriver.class, Constants.Sensors.PINPOINT_NAME);
-        pinpoint.setOffsets(Constants.Sensors.PINPOINT_X_OFFSET, Constants.Sensors.PINPOINT_Y_OFFSET, DistanceUnit.MM);
-        pinpoint.setEncoderResolution(Constants.Sensors.PINPOINT_ENCODER_RESOLUTION);
-        pinpoint.setEncoderDirections(Constants.Sensors.PINPOINT_X_ENCODER_DIRECTION, Constants.Sensors.PINPOINT_Y_ENCODER_DIRECTION);
+        try {
+            pinpoint = hardwareMap.get(GoBildaPinpointDriver.class, Constants.Sensors.PINPOINT_NAME);
+            pinpoint.setOffsets(Constants.Sensors.PINPOINT_X_OFFSET, Constants.Sensors.PINPOINT_Y_OFFSET, DistanceUnit.MM);
+            pinpoint.setEncoderResolution(Constants.Sensors.PINPOINT_ENCODER_RESOLUTION);
+            pinpoint.setEncoderDirections(Constants.Sensors.PINPOINT_X_ENCODER_DIRECTION, Constants.Sensors.PINPOINT_Y_ENCODER_DIRECTION);
+        } catch (RuntimeException exception) {
+            pinpoint = null;
+            throw new RobotInitializationException(
+                    "PinpointHardware",
+                    "expected a Pinpoint named " + Constants.Sensors.PINPOINT_NAME,
+                    exception);
+        }
     }
 
     public Pose2D getPosition() {
-        return pinpoint.getPosition();
+        return pinpoint == null ? null : pinpoint.getPosition();
     }
 
     public double getHeading() {

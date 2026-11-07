@@ -18,4 +18,12 @@ package org.firstinspires.ftc.teamcode.framework;
  * Subsystems should be the main place where mechanism-specific behavior lives.
  */
 public interface Subsystem {
+    default void init() {
+    }
+
+    default void periodic() {
+    }
+
+    default void stop() {
+    }
 }

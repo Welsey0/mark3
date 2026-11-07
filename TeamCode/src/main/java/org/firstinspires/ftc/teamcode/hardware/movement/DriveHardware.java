@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.framework.Hardware;
+import org.firstinspires.ftc.teamcode.framework.RobotInitializationException;
 import org.firstinspires.ftc.teamcode.robot.Constants;
 
 /**
@@ -20,10 +21,17 @@ public class DriveHardware implements Hardware {
 
 	@Override
 	public void init(HardwareMap hardwareMap) {
-		frontLeft = hardwareMap.dcMotor.get(Constants.Drive.FRONT_LEFT);
-		backLeft = hardwareMap.dcMotor.get(Constants.Drive.BACK_LEFT);
-		frontRight = hardwareMap.dcMotor.get(Constants.Drive.FRONT_RIGHT);
-		backRight = hardwareMap.dcMotor.get(Constants.Drive.BACK_RIGHT);
+		try {
+			frontLeft = hardwareMap.dcMotor.get(Constants.Drive.FRONT_LEFT);
+			backLeft = hardwareMap.dcMotor.get(Constants.Drive.BACK_LEFT);
+			frontRight = hardwareMap.dcMotor.get(Constants.Drive.FRONT_RIGHT);
+			backRight = hardwareMap.dcMotor.get(Constants.Drive.BACK_RIGHT);
+		} catch (RuntimeException exception) {
+			throw new RobotInitializationException(
+					"DriveHardware",
+					"expected motors FL, FR, BL, and BR",
+					exception);
+		}
 
 		// Set directions from configuration
 		frontLeft.setDirection(Constants.Drive.FRONT_LEFT_REVERSED ? DcMotor.Direction.REVERSE : DcMotor.Direction.FORWARD);

@@ -4,28 +4,61 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.framework.Hardware;
+import org.firstinspires.ftc.teamcode.framework.RobotInitializationException;
 import org.firstinspires.ftc.teamcode.robot.Constants;
 
 public class ShooterHardware implements Hardware {
-    public DcMotor shooterTop;
-    public DcMotor shooterBottom;
+    private DcMotor shooterTop;
+    private DcMotor shooterBottom;
+    private final Constants.Shooter.Configuration configuration;
+    private final String topName;
+    private final String bottomName;
+
+    public ShooterHardware() {
+        this(Constants.Shooter.CONFIGURATION, Constants.Shooter.TOP, Constants.Shooter.BOTTOM);
+    }
+
+    public ShooterHardware(Constants.Shooter.Configuration configuration,
+                           String topName, String bottomName) {
+        if (configuration == null || topName == null || topName.isEmpty()) {
+            throw new IllegalArgumentException("shooter configuration and primary motor are required");
+        }
+        this.configuration = configuration;
+        this.topName = topName;
+        this.bottomName = bottomName;
+    }
 
     @Override
     public void init(HardwareMap hardwareMap) {
-        shooterTop = hardwareMap.dcMotor.get(Constants.Shooter.TOP);
-        shooterBottom = hardwareMap.dcMotor.get(Constants.Shooter.BOTTOM);
+        try {
+            shooterTop = hardwareMap.dcMotor.get(topName);
+            if (configuration != Constants.Shooter.Configuration.SINGLE_WHEEL) {
+                if (bottomName == null || bottomName.isEmpty()) {
+                    throw new IllegalArgumentException("secondary shooter motor name is required");
+                }
+                shooterBottom = hardwareMap.dcMotor.get(bottomName);
+            }
+        } catch (RuntimeException exception) {
+            throw new RobotInitializationException(
+                    "ShooterHardware",
+                    "check the configured shooter motor names and configuration",
+                    exception);
+        }
 
         // Set directions from configuration
         shooterTop.setDirection(Constants.Shooter.TOP_REVERSED ? DcMotor.Direction.REVERSE : DcMotor.Direction.FORWARD);
-        shooterBottom.setDirection(Constants.Shooter.BOTTOM_REVERSED ? DcMotor.Direction.REVERSE : DcMotor.Direction.FORWARD);
+        if (shooterBottom != null) {
+            shooterBottom.setDirection(Constants.Shooter.BOTTOM_REVERSED
+                    ? DcMotor.Direction.REVERSE : DcMotor.Direction.FORWARD);
+        }
 
         // Default motor behavior (configurable)
         if (org.firstinspires.ftc.teamcode.robot.Constants.Shooter.ZERO_POWER_BRAKE) {
             shooterTop.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            shooterBottom.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            if (shooterBottom != null) shooterBottom.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         } else {
             shooterTop.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-            shooterBottom.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+            if (shooterBottom != null) shooterBottom.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         }
     }
 
@@ -35,7 +68,9 @@ public class ShooterHardware implements Hardware {
      */
     public void setMotorPowers(double top, double bottom) {
         shooterTop.setPower(top);
-        shooterBottom.setPower(bottom);
+        if (shooterBottom != null) {
+            shooterBottom.setPower(bottom);
+        }
     }
 
     @Override

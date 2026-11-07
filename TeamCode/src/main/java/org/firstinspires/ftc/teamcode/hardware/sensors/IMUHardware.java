@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.hardware.sensors;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.framework.Hardware;
+import org.firstinspires.ftc.teamcode.framework.RobotInitializationException;
 import org.firstinspires.ftc.teamcode.robot.Constants;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
@@ -18,8 +19,12 @@ public class IMUHardware implements Hardware {
                     Constants.Sensors.HUB_ORIENTATION
             );
             imu.initialize(IMUparameters);
-        } catch (RuntimeException ignored) {
+        } catch (RuntimeException exception) {
             imu = null;
+            throw new RobotInitializationException(
+                    "IMUHardware",
+                    "expected an IMU named " + Constants.Sensors.IMU_NAME,
+                    exception);
         }
     }
     /**
