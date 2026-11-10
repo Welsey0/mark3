@@ -52,6 +52,19 @@ public final class Constants {
         public static final double POWER_SCALE = 1.0;
     }
 
+    public static final class Turret {
+        public enum Configuration {
+            MOTOR,
+            SERVO
+        }
+
+        public static final Configuration CONFIGURATION = Configuration.SERVO;
+        public static final String ROTATIONACTUATOR = "rotActuator";
+        public static final boolean ROTATIONACTUATOR_REVERSED = false;
+        public static final boolean ZERO_POWER_BRAKE = false;
+        public static final double POWER_SCALE = 1.0;
+    }
+
     public static final class Sensors {
         public static final String IMU_NAME = "imu";
         public static final RevHubOrientationOnRobot HUB_ORIENTATION = new RevHubOrientationOnRobot(

@@ -14,7 +14,7 @@ public class ShooterSubsystem implements Subsystem {
     }
     public void setPower(double top, double bottom) {
         if (hardware != null) {
-            hardware.setMotorPowers(top, bottom);
+            hardware.setPowers(top, bottom);
         }
     }
     public void stop() {

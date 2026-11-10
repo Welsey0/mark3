@@ -66,7 +66,7 @@ public class ShooterHardware implements Hardware {
      * Set motor powers in the order: frontLeft, frontRight, backLeft, backRight.
      * Values should be in [-1, 1].
      */
-    public void setMotorPowers(double top, double bottom) {
+    public void setPowers(double top, double bottom) {
         shooterTop.setPower(top);
         if (shooterBottom != null) {
             shooterBottom.setPower(bottom);
@@ -75,6 +75,6 @@ public class ShooterHardware implements Hardware {
 
     @Override
     public void stop() {
-        setMotorPowers(0,0);
+        setPowers(0,0);
     }
 }
