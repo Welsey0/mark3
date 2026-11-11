@@ -59,10 +59,13 @@ public final class Constants {
         }
 
         public static final Configuration CONFIGURATION = Configuration.SERVO;
-        public static final String ROTATIONACTUATOR = "rotActuator";
-        public static final boolean ROTATIONACTUATOR_REVERSED = false;
+        public static final String LEFT_ROTATION_ACTUATOR = "turretLeft";
+        public static final String RIGHT_ROTATION_ACTUATOR = "turretRight";
+        public static final boolean LEFT_ROTATION_ACTUATOR_REVERSED = false;
+        public static final boolean RIGHT_ROTATION_ACTUATOR_REVERSED = false;
         public static final boolean ZERO_POWER_BRAKE = false;
         public static final double POWER_SCALE = 1.0;
+        public static final double SERVO_STOP_POSITION = 0.5;
     }
 
     public static final class Sensors {

@@ -41,8 +41,7 @@ public class MecanumTeleOp extends OpMode {
             double dx = applyDeadband(strafe.value(gamepad1) * Constants.Drive.STRAFE_INPUT_SIGN);
             double dy = applyDeadband(forward.value(gamepad1) * Constants.Drive.FORWARD_INPUT_SIGN);
             double rx = applyDeadband(turn.value(gamepad1) * Constants.Drive.TURN_INPUT_SIGN);
-            double top = shooterTop.value(gamepad1) * Constants.Shooter.INPUT_SIGN;
-            double bottom = shooterBottom.value(gamepad1) * Constants.Shooter.INPUT_SIGN;
+            double shooter = shooterTop.value(gamepad1) * Constants.Shooter.INPUT_SIGN;
             boolean slowModeActive = slowMode.active(gamepad1);
 
             robot.drive().driveWithHeading(
@@ -53,8 +52,8 @@ public class MecanumTeleOp extends OpMode {
                     slowModeActive
             );
             robot.shooter().setPower(
-                    top * Constants.Shooter.POWER_SCALE,
-                    bottom * Constants.Shooter.POWER_SCALE);
+                    shooter * Constants.Shooter.POWER_SCALE,
+                    shooter * Constants.Shooter.POWER_SCALE);
             robot.periodic();
         }
     }

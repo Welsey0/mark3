@@ -14,8 +14,12 @@ public class TurretSubsystem implements Subsystem {
         this.hardware = hardware;
     }
 
-    public void setPower(double power) {
-        hardware.setPower(power);
+    public void setPower(TurretHardware.Side side, double power) {
+        hardware.setPower(side, power);
+    }
+
+    public void setPowers(double left, double right) {
+        hardware.setPowers(left, right);
     }
 
     @Override

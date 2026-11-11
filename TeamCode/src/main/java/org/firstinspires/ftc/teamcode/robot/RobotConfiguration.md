@@ -40,6 +40,21 @@ opmode owns the step variable and chooses when to call the drive subsystem.
 multiple selected subsystems; it does not own hardware or autonomous steps.
 Custom supersystems can be added with `withSupersystem(...)`.
 
+Vision is configured explicitly because each camera may use a different
+processor. Construct `CameraHardware` with webcam configurations and/or
+Limelight pipeline IDs, then register it with `.withCameras(...)`. Webcam
+ball detection can use `HiveBallDetectorPipeline`; a custom goal processor
+must implement both `VisionProcessor` and `DetectionProvider`.
+
+Turrets are configured as a left/right pair:
+
+```java
+robot = RobotContext.builder(hardwareMap, telemetry)
+        .withTurret()
+        .build();
+robot.turret().setPowers(leftCommand, rightCommand);
+```
+
 Use one hardware wrapper per physical device. If two subsystems need drive
 output, pass the same `DriveSubsystem` to both; do not look up the motors again.
 

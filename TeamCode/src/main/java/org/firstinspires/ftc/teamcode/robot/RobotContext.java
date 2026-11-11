@@ -8,9 +8,11 @@ import org.firstinspires.ftc.teamcode.framework.Supersystem;
 import org.firstinspires.ftc.teamcode.hardware.movement.DriveHardware;
 import org.firstinspires.ftc.teamcode.hardware.movement.ShooterHardware;
 import org.firstinspires.ftc.teamcode.hardware.movement.TurretHardware;
+import org.firstinspires.ftc.teamcode.hardware.vision.CameraHardware;
 import org.firstinspires.ftc.teamcode.hardware.sensors.IMUHardware;
 import org.firstinspires.ftc.teamcode.hardware.sensors.PinpointHardware;
 import org.firstinspires.ftc.teamcode.subsystems.AutonomousSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.CameraSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.DriveSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.PositionSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.ShooterSubsystem;
@@ -29,6 +31,7 @@ public final class RobotContext {
     private final ShooterSubsystem shooter;
     private final AutonomousSubsystem autonomous;
     private final TurretSubsystem turret;
+    private final CameraSubsystem camera;
     private final List<Supersystem> supersystems;
 
     private RobotContext(Builder builder) {
@@ -39,6 +42,7 @@ public final class RobotContext {
         this.shooter = builder.shooter;
         this.autonomous = builder.autonomous;
         this.turret = builder.turret;
+        this.camera = builder.camera;
         this.supersystems = new ArrayList<>(builder.supersystems);
         this.subsystems.add(telemetrySubsystem);
     }
@@ -81,6 +85,7 @@ public final class RobotContext {
     public PositionSubsystem position() { return position; }
     public ShooterSubsystem shooter() { return shooter; }
     public TurretSubsystem turret() { return turret; }
+    public CameraSubsystem camera() { return camera; }
     public AutonomousSubsystem autonomous() { return autonomous; }
     public List<Supersystem> supersystems() {
         return new ArrayList<>(supersystems);
@@ -94,6 +99,7 @@ public final class RobotContext {
         private PositionSubsystem position;
         private ShooterSubsystem shooter;
         private TurretSubsystem turret;
+        private CameraSubsystem camera;
         private AutonomousSubsystem autonomous;
         private final List<Supersystem> supersystems = new ArrayList<>();
 
@@ -151,17 +157,31 @@ public final class RobotContext {
         public Builder withTurret() {
             return withTurret(
                     Constants.Turret.CONFIGURATION,
-                    Constants.Turret.ROTATIONACTUATOR);
+                    Constants.Turret.LEFT_ROTATION_ACTUATOR,
+                    Constants.Turret.RIGHT_ROTATION_ACTUATOR);
         }
 
         public Builder withTurret(
                 Constants.Turret.Configuration configuration,
-                String actuatorName) {
+                String leftActuatorName,
+                String rightActuatorName) {
             requireUnset(turret, "TurretSubsystem");
-            TurretHardware hardware = new TurretHardware(configuration, actuatorName);
+            TurretHardware hardware = new TurretHardware(
+                    configuration, leftActuatorName, rightActuatorName);
             initialize("TurretSubsystem", hardware);
             turret = new TurretSubsystem(hardware);
             subsystems.add(turret);
+            return this;
+        }
+
+        public Builder withCameras(CameraHardware hardware) {
+            requireUnset(camera, "CameraSubsystem");
+            if (hardware == null) {
+                throw new RobotInitializationException("CameraSubsystem", "CameraHardware is null");
+            }
+            initialize("CameraSubsystem", hardware);
+            camera = new CameraSubsystem(hardware);
+            subsystems.add(camera);
             return this;
         }
 
