@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcode.framework.RobotInitializationException;
 
 // Built on TheGodObject by casperwz
 
-public final class AutonomousSubsystem implements Subsystem, TelemetrySource {
+public final class AutoDriveSubsystem implements Subsystem, TelemetrySource {
     private static final double FEED_FORWARD = 0.025;
     private final DriveSubsystem drive;
     private final PositionSubsystem position;
@@ -29,10 +29,10 @@ public final class AutonomousSubsystem implements Subsystem, TelemetrySource {
     private boolean complete;
     private String error;
 
-    public AutonomousSubsystem(DriveSubsystem drive, PositionSubsystem position) {
+    public AutoDriveSubsystem(DriveSubsystem drive, PositionSubsystem position) {
         if (drive == null || position == null) {
             throw new RobotInitializationException(
-                    "AutonomousSubsystem", "drive and position subsystems are required");
+                    "AutoDriveSubsystem", "drive and position subsystems are required");
         }
         this.drive = drive;
         this.position = position;

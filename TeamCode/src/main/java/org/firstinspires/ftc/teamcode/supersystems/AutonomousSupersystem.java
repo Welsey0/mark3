@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.supersystems;
 
 import org.firstinspires.ftc.teamcode.framework.Supersystem;
 import org.firstinspires.ftc.teamcode.framework.RobotInitializationException;
-import org.firstinspires.ftc.teamcode.subsystems.AutonomousSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.AutoDriveSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.DriveSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.PositionSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.ShooterSubsystem;
@@ -12,12 +12,12 @@ import org.firstinspires.ftc.teamcode.subsystems.ShooterSubsystem;
  * when to call these methods; this class only coordinates selected subsystems.
  */
 public final class AutonomousSupersystem implements Supersystem {
-    private final AutonomousSubsystem drive;
+    private final AutoDriveSubsystem drive;
     private final DriveSubsystem drivetrain;
     private final PositionSubsystem position;
     private final ShooterSubsystem shooter;
 
-    public AutonomousSupersystem(AutonomousSubsystem drive,
+    public AutonomousSupersystem(AutoDriveSubsystem drive,
                                  DriveSubsystem drivetrain,
                                  PositionSubsystem position,
                                  ShooterSubsystem shooter) {
@@ -32,7 +32,7 @@ public final class AutonomousSupersystem implements Supersystem {
         this.shooter = shooter;
     }
 
-    public AutonomousSubsystem drive() {
+    public AutoDriveSubsystem drive() {
         return drive;
     }
 

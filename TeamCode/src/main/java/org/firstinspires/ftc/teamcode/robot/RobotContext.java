@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.hardware.movement.ShooterHardware;
 import org.firstinspires.ftc.teamcode.hardware.movement.TurretHardware;
 import org.firstinspires.ftc.teamcode.hardware.sensors.IMUHardware;
 import org.firstinspires.ftc.teamcode.hardware.sensors.PinpointHardware;
-import org.firstinspires.ftc.teamcode.subsystems.AutonomousSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.AutoDriveSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.DriveSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.PositionSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.ShooterSubsystem;
@@ -27,7 +27,7 @@ public final class RobotContext {
     private final DriveSubsystem drive;
     private final PositionSubsystem position;
     private final ShooterSubsystem shooter;
-    private final AutonomousSubsystem autonomous;
+    private final AutoDriveSubsystem autonomous;
     private final TurretSubsystem turret;
     private final List<Supersystem> supersystems;
 
@@ -81,7 +81,7 @@ public final class RobotContext {
     public PositionSubsystem position() { return position; }
     public ShooterSubsystem shooter() { return shooter; }
     public TurretSubsystem turret() { return turret; }
-    public AutonomousSubsystem autonomous() { return autonomous; }
+    public AutoDriveSubsystem autonomous() { return autonomous; }
     public List<Supersystem> supersystems() {
         return new ArrayList<>(supersystems);
     }
@@ -94,7 +94,7 @@ public final class RobotContext {
         private PositionSubsystem position;
         private ShooterSubsystem shooter;
         private TurretSubsystem turret;
-        private AutonomousSubsystem autonomous;
+        private AutoDriveSubsystem autonomous;
         private final List<Supersystem> supersystems = new ArrayList<>();
 
         private Builder(HardwareMap hardwareMap, Telemetry telemetry) {
@@ -166,17 +166,17 @@ public final class RobotContext {
         }
 
         public Builder withAutonomousSupersystem() {
-            requireDependency(autonomous, "AutonomousSupersystem", "AutonomousSubsystem");
+            requireDependency(autonomous, "AutonomousSupersystem", "AutoDriveSubsystem");
             supersystems.add(new AutonomousSupersystem(
                     autonomous, drive, position, shooter));
             return this;
         }
 
         public Builder withAutonomous() {
-            requireUnset(autonomous, "AutonomousSubsystem");
-            requireDependency(drive, "AutonomousSubsystem", "DriveSubsystem");
-            requireDependency(position, "AutonomousSubsystem", "PositionSubsystem");
-            autonomous = new AutonomousSubsystem(drive, position);
+            requireUnset(autonomous, "AutoDriveSubsystem");
+            requireDependency(drive, "AutoDriveSubsystem", "DriveSubsystem");
+            requireDependency(position, "AutoDriveSubsystem", "PositionSubsystem");
+            autonomous = new AutoDriveSubsystem(drive, position);
             telemetrySubsystem.addSource(autonomous);
             subsystems.add(autonomous);
             return this;
