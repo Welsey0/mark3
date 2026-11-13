@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.hardware.movement.DriveHardware;
 import org.firstinspires.ftc.teamcode.hardware.movement.ShooterHardware;
 import org.firstinspires.ftc.teamcode.hardware.movement.TurretHardware;
 import org.firstinspires.ftc.teamcode.hardware.sensors.IMUHardware;
-import org.firstinspires.ftc.teamcode.hardware.sensors.PinpointHardware;
+import org.firstinspires.ftc.teamcode.hardware.sensors.TwoPodOdometryHardware;
 import org.firstinspires.ftc.teamcode.subsystems.AutoDriveSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.DriveSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.PositionSubsystem;
@@ -114,16 +114,21 @@ public final class RobotContext {
             return this;
         }
 
-        public Builder withPosition(boolean useImu, boolean usePinpoint) {
+        public Builder withPosition(boolean useImu, boolean useOdometry) {
             requireUnset(position, "PositionSubsystem");
-            if (!useImu && !usePinpoint) {
+            if (!useImu && !useOdometry) {
                 throw new RobotInitializationException(
                         "PositionSubsystem", "at least one position sensor must be selected");
             }
+            if (useOdometry && !useImu) {
+                throw new RobotInitializationException(
+                        "PositionSubsystem",
+                        "two-pod odometry requires the IMU for heading");
+            }
             IMUHardware imu = useImu ? initialize("IMUHardware", new IMUHardware()) : null;
-            PinpointHardware pinpoint =
-                    usePinpoint ? initialize("PinpointHardware", new PinpointHardware()) : null;
-            position = new PositionSubsystem(imu, pinpoint);
+            TwoPodOdometryHardware odometry =
+                    useOdometry ? initialize("TwoPodOdometryHardware", new TwoPodOdometryHardware()) : null;
+            position = new PositionSubsystem(imu, odometry);
             subsystems.add(position);
             return this;
         }

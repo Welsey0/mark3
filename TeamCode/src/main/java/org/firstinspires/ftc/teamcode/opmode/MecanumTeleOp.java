@@ -29,7 +29,7 @@ public class MecanumTeleOp extends OpMode {
     public void init() {
         robot = RobotContext.builder(hardwareMap, telemetry)
                 .withDrive()
-                .withPosition(true, false)
+                .withPosition(true, true)
                 .withShooter()
                 .build();
         robot.init();

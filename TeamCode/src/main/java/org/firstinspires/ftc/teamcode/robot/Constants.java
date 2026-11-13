@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.robot;
 
-import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 
 /**
@@ -72,11 +72,17 @@ public final class Constants {
                 RevHubOrientationOnRobot.UsbFacingDirection.UP
         );
 
-        public static final String PINPOINT_NAME = "pinpoint";
-        public static final double PINPOINT_X_OFFSET = 0;
-        public static final double PINPOINT_Y_OFFSET = 0;
-        public static final GoBildaPinpointDriver.GoBildaOdometryPods PINPOINT_ENCODER_RESOLUTION = GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD;
-        public static final GoBildaPinpointDriver.EncoderDirection PINPOINT_X_ENCODER_DIRECTION = GoBildaPinpointDriver.EncoderDirection.FORWARD;
-        public static final GoBildaPinpointDriver.EncoderDirection PINPOINT_Y_ENCODER_DIRECTION = GoBildaPinpointDriver.EncoderDirection.FORWARD;
+        public static final String ODOMETRY_PARALLEL_NAME = "odoParallel";
+        public static final String ODOMETRY_PERPENDICULAR_NAME = "odoPerpendicular";
+        public static final double ODOMETRY_TICKS_PER_REV = 2000.0;
+        public static final double ODOMETRY_WHEEL_DIAMETER_MM = 38.1;
+        // Offsets are measured from the robot center. Positive X is forward and
+        // positive Y is left when viewed from above.
+        public static final double ODOMETRY_PARALLEL_Y_OFFSET_MM = 0.0;
+        public static final double ODOMETRY_PERPENDICULAR_X_OFFSET_MM = 0.0;
+        public static final DcMotorSimple.Direction ODOMETRY_PARALLEL_DIRECTION =
+                DcMotorSimple.Direction.FORWARD;
+        public static final DcMotorSimple.Direction ODOMETRY_PERPENDICULAR_DIRECTION =
+                DcMotorSimple.Direction.FORWARD;
     }
 }
