@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.framework;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+
 /**
  * Represents a robot subsystem.
  *
@@ -23,6 +25,8 @@ public interface Subsystem {
 
     default void periodic() {
     }
+
+    void addTelemetry(Telemetry telemetry);
 
     default void stop() {
     }

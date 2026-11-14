@@ -1,7 +1,9 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.framework.Subsystem;
 import org.firstinspires.ftc.teamcode.framework.RobotInitializationException;
+import org.firstinspires.ftc.teamcode.framework.TelemetrySource;
 import org.firstinspires.ftc.teamcode.hardware.movement.DriveHardware;
 import org.firstinspires.ftc.teamcode.robot.Constants;
 
@@ -11,7 +13,7 @@ import org.firstinspires.ftc.teamcode.robot.Constants;
  * This subsystem converts desired translation/rotation commands into mecanum
  * wheel powers and delegates low-level outputs to DriveHardware.
  */
-public class DriveSubsystem implements Subsystem {
+public class DriveSubsystem implements Subsystem, TelemetrySource {
 
 	private final DriveHardware hardware;
 
@@ -20,6 +22,17 @@ public class DriveSubsystem implements Subsystem {
 			throw new RobotInitializationException("DriveSubsystem", "DriveHardware is null");
 		}
 		this.hardware = hardware;
+	}
+	private boolean complete;
+	private String error;
+	@Override
+	public void addTelemetry(Telemetry telemetry) {
+        telemetry.addData("Autonomous state", error != null ? "ERROR" : complete ? "COMPLETE" : "RUNNING");
+		if (error != null) telemetry.addData("Autonomous error", error);
+		telemetry.addData("m1", m1);
+		telemetry.addData("m2", m2);
+		telemetry.addData("m3", m3);
+		telemetry.addData("m4", m4);
 	}
 
 	/**
@@ -32,9 +45,16 @@ public class DriveSubsystem implements Subsystem {
 	 *
 	 * Values expected in -1..1 range. Will be clipped automatically.
 	 */
+	double m1;
+	double m2;
+	double m3;
+	double m4;
 	public void driveWithHeading(double dx, double dy, double rx, double headingRadians) {
 		double[] powers = calculateWheelPowers(dx, dy, rx, headingRadians);
-
+		m1 = powers[0];
+		m2 = powers[1];
+		m3 = powers[2];
+		m4 = powers[3];
 		if (hardware != null) {
 			hardware.setMotorPowers(powers[0], powers[1], powers[2], powers[3]);
 		}

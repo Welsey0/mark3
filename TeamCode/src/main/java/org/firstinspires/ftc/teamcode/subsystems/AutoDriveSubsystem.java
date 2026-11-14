@@ -18,9 +18,9 @@ public final class AutoDriveSubsystem implements Subsystem, TelemetrySource {
     private static final double FEED_FORWARD = 0.025;
     private final DriveSubsystem drive;
     private final PositionSubsystem position;
-    private final PIDController xController = new PIDController(0.022, 0.02, 0.001);
-    private final PIDController yController = new PIDController(0.022, 0.02, 0.001);
-    private final PIDController headingController = new PIDController(0.02, 0.02, 0.001);
+    private final PIDController xController = new PIDController(100, 0.02, 0.001);
+    private final PIDController yController = new PIDController(100, 0.02, 0.001);
+    private final PIDController headingController = new PIDController(100, 0.02, 0.001);
     private final ElapsedTime timer = new ElapsedTime();
     private Path path;
     private MotionProfile profile;
@@ -65,6 +65,9 @@ public final class AutoDriveSubsystem implements Subsystem, TelemetrySource {
         }
     }
 
+    double fb;
+    double lr;
+    double r;
     private void updatePath() {
         MotionProfile.State target = profile.calculate(path.length(), timer.seconds());
         double x = position.getX();
@@ -82,13 +85,13 @@ public final class AutoDriveSubsystem implements Subsystem, TelemetrySource {
         Point derivative = path.derivativeAt(parameter);
         double angle = Math.atan2(derivative.y, derivative.x);
         double headingError = wrap(targetHeading - heading);
-        drive.driveWithHeading(
-                -(Math.cos(angle) * target.velocity * FEED_FORWARD
-                        + xController.calculate(x, targetPoint.x)),
-                -(Math.sin(angle) * target.velocity * FEED_FORWARD
-                        + yController.calculate(y, targetPoint.y)),
-                -headingController.calculate(heading, heading + headingError),
-                heading);
+        fb = -(Math.cos(angle) * target.velocity * FEED_FORWARD
+                + xController.calculate(x, targetPoint.x));
+        lr = -(Math.sin(angle) * target.velocity * FEED_FORWARD
+                + yController.calculate(y, targetPoint.y));
+        r = -headingController.calculate(heading, heading + headingError);
+
+        drive.driveWithHeading(fb, lr, r, heading);
     }
 
     public boolean isFinished() {
@@ -119,6 +122,9 @@ public final class AutoDriveSubsystem implements Subsystem, TelemetrySource {
     public void addTelemetry(Telemetry telemetry) {
         telemetry.addData("Autonomous state", error != null ? "ERROR" : complete ? "COMPLETE" : "RUNNING");
         if (error != null) telemetry.addData("Autonomous error", error);
+        telemetry.addData("fb",fb);
+        telemetry.addData("lr",lr);
+        telemetry.addData("r",r);
     }
 
     private static double wrap(double angle) {

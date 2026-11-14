@@ -37,7 +37,7 @@ public final class RobotContext {
         this.drive = builder.drive;
         this.position = builder.position;
         this.shooter = builder.shooter;
-        this.autonomous = builder.autonomous;
+        this.autonomous = builder.autodrive;
         this.turret = builder.turret;
         this.supersystems = new ArrayList<>(builder.supersystems);
         this.subsystems.add(telemetrySubsystem);
@@ -94,7 +94,7 @@ public final class RobotContext {
         private PositionSubsystem position;
         private ShooterSubsystem shooter;
         private TurretSubsystem turret;
-        private AutoDriveSubsystem autonomous;
+        private AutoDriveSubsystem autodrive;
         private final List<Supersystem> supersystems = new ArrayList<>();
 
         private Builder(HardwareMap hardwareMap, Telemetry telemetry) {
@@ -110,6 +110,7 @@ public final class RobotContext {
             DriveHardware hardware = new DriveHardware();
             initialize("DriveSubsystem", hardware);
             drive = new DriveSubsystem(hardware);
+            telemetrySubsystem.addSource(drive);
             subsystems.add(drive);
             return this;
         }
@@ -166,19 +167,19 @@ public final class RobotContext {
         }
 
         public Builder withAutonomousSupersystem() {
-            requireDependency(autonomous, "AutonomousSupersystem", "AutoDriveSubsystem");
+            requireDependency(autodrive, "AutonomousSupersystem", "AutoDriveSubsystem");
             supersystems.add(new AutonomousSupersystem(
-                    autonomous, drive, position, shooter));
+                    autodrive, drive, position, shooter));
             return this;
         }
 
-        public Builder withAutonomous() {
-            requireUnset(autonomous, "AutoDriveSubsystem");
+        public Builder withAutoDrive() {
+            requireUnset(autodrive, "AutoDriveSubsystem");
             requireDependency(drive, "AutoDriveSubsystem", "DriveSubsystem");
             requireDependency(position, "AutoDriveSubsystem", "PositionSubsystem");
-            autonomous = new AutoDriveSubsystem(drive, position);
-            telemetrySubsystem.addSource(autonomous);
-            subsystems.add(autonomous);
+            autodrive = new AutoDriveSubsystem(drive, position);
+            telemetrySubsystem.addSource(autodrive);
+            subsystems.add(autodrive);
             return this;
         }
 

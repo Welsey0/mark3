@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.subsystems;
 
 import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
 import com.qualcomm.robotcore.hardware.IMU;
+
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 import org.firstinspires.ftc.teamcode.framework.Subsystem;
 import org.firstinspires.ftc.teamcode.hardware.sensors.IMUHardware;
@@ -39,5 +41,10 @@ public class PositionSubsystem implements Subsystem {
     public double getY() {
         Pose2D pose = pinpointHardware == null ? null : pinpointHardware.getPosition();
         return pose == null ? 0.0 : pose.getY(org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit.MM);
+    }
+
+    @Override
+    public void addTelemetry(Telemetry telemetry) {
+        
     }
 }

@@ -2,14 +2,10 @@ package org.firstinspires.ftc.teamcode.opmode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import org.firstinspires.ftc.teamcode.framework.input.GamepadInput;
+
 import org.firstinspires.ftc.teamcode.robot.Constants;
 import org.firstinspires.ftc.teamcode.robot.RobotContext;
 import org.firstinspires.ftc.teamcode.subsystems.AutoDriveSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.AutoDriveSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.DriveSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.PositionSubsystem;
-import org.firstinspires.ftc.teamcode.supersystems.AutonomousSupersystem;
 
 /**
  * Demonstration OpMode implementing basic mecanum drive.
@@ -37,7 +33,8 @@ public class Autonymous extends OpMode {
         robot = RobotContext.builder(hardwareMap, telemetry)
                 .withDrive()
                 .withPosition(true, false)
-                .withShooter()
+                //.withShooter()
+                .withAutoDrive()
                 .build();
         robot.init();
     }
@@ -47,11 +44,11 @@ public class Autonymous extends OpMode {
 
         if (robot == null) {return;}
 
-        switch (State) {
-            case gotopollinone:
-                robot.autonomous().followPath(new AutoDriveSubsystem.Path(new AutoDriveSubsystem.Point(0,0), new AutoDriveSubsystem.Point(0,0), new AutoDriveSubsystem.Point(0,0), new AutoDriveSubsystem.Point(0,1000)), new AutoDriveSubsystem.MotionProfile(100,100), 4.71238898038);
-                break;
-        }
+        /*switch (State) {
+            case gotopollinone:*/
+                robot.autonomous().followPath(new AutoDriveSubsystem.Path(new AutoDriveSubsystem.Point(0,0), new AutoDriveSubsystem.Point(0,100), new AutoDriveSubsystem.Point(0,100), new AutoDriveSubsystem.Point(0,1000)), new AutoDriveSubsystem.MotionProfile(1,1), 3.14);
+                /*break;
+        }*/
         robot.periodic();
     }
 

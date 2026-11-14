@@ -1,4 +1,5 @@
 package org.firstinspires.ftc.teamcode.subsystems;
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.framework.Subsystem;
 import org.firstinspires.ftc.teamcode.framework.RobotInitializationException;
 import org.firstinspires.ftc.teamcode.hardware.movement.ShooterHardware;
@@ -17,6 +18,12 @@ public class ShooterSubsystem implements Subsystem {
             hardware.setPowers(top, bottom);
         }
     }
+
+    @Override
+    public void addTelemetry(Telemetry telemetry) {
+
+    }
+
     public void stop() {
         if (hardware != null) hardware.stop();
     }

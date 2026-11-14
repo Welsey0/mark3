@@ -34,6 +34,11 @@ public final class TelemetrySubsystem implements Subsystem {
         telemetry.update();
     }
 
+    @Override
+    public void addTelemetry(Telemetry telemetry) {
+
+    }
+
     public void status(String status) {
         telemetry.addData("Status", status);
     }

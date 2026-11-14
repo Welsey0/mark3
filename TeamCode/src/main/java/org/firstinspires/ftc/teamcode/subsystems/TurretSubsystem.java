@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.framework.Subsystem;
 import org.firstinspires.ftc.teamcode.framework.RobotInitializationException;
 import org.firstinspires.ftc.teamcode.hardware.movement.TurretHardware;
@@ -16,6 +17,11 @@ public class TurretSubsystem implements Subsystem {
 
     public void setPower(double power) {
         hardware.setPower(power);
+    }
+
+    @Override
+    public void addTelemetry(Telemetry telemetry) {
+
     }
 
     @Override
