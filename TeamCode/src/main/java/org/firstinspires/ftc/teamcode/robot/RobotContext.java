@@ -125,6 +125,7 @@ public final class RobotContext {
             PinpointHardware pinpoint =
                     usePinpoint ? initialize("PinpointHardware", new PinpointHardware()) : null;
             position = new PositionSubsystem(imu, pinpoint);
+            telemetrySubsystem.addSource(position);
             subsystems.add(position);
             return this;
         }

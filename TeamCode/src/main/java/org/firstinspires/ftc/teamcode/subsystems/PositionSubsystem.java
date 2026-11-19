@@ -6,11 +6,12 @@ import com.qualcomm.robotcore.hardware.IMU;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 import org.firstinspires.ftc.teamcode.framework.Subsystem;
+import org.firstinspires.ftc.teamcode.framework.TelemetrySource;
 import org.firstinspires.ftc.teamcode.hardware.sensors.IMUHardware;
 import org.firstinspires.ftc.teamcode.hardware.sensors.PinpointHardware;
 import org.firstinspires.ftc.teamcode.framework.RobotInitializationException;
 
-public class PositionSubsystem implements Subsystem {
+public class PositionSubsystem implements Subsystem, TelemetrySource {
     private final IMUHardware imuHardware;
     private final PinpointHardware pinpointHardware;
     public PositionSubsystem(IMUHardware imuHardware, PinpointHardware pinpointHardware) {
@@ -33,18 +34,26 @@ public class PositionSubsystem implements Subsystem {
         return imu != null ? iHeading : pHeading;
     }
 
+    public double x = 2;
+    public double y = 0;
+    public Pose2D pose = null;
+
     public double getX() {
-        Pose2D pose = pinpointHardware == null ? null : pinpointHardware.getPosition();
-        return pose == null ? 0.0 : pose.getX(org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit.MM);
+        pose = pinpointHardware == null ? null : pinpointHardware.getPosition();
+        x=pose == null ? 0.0 : pose.getX(org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit.MM);
+        return x;
     }
 
     public double getY() {
-        Pose2D pose = pinpointHardware == null ? null : pinpointHardware.getPosition();
-        return pose == null ? 0.0 : pose.getY(org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit.MM);
+        pose = pinpointHardware == null ? null : pinpointHardware.getPosition();
+        y = pose == null ? 0.0 : pose.getY(org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit.MM);
+        return y;
     }
 
     @Override
     public void addTelemetry(Telemetry telemetry) {
-        
+        telemetry.addData("x", x);
+        telemetry.addData("y", y);
+        telemetry.addData("pose", pose);
     }
 }

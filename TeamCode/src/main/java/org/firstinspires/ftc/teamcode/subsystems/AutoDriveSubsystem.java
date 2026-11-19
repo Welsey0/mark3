@@ -18,9 +18,9 @@ public final class AutoDriveSubsystem implements Subsystem, TelemetrySource {
     private static final double FEED_FORWARD = 0.025;
     private final DriveSubsystem drive;
     private final PositionSubsystem position;
-    private final PIDController xController = new PIDController(100, 0.02, 0.001);
-    private final PIDController yController = new PIDController(100, 0.02, 0.001);
-    private final PIDController headingController = new PIDController(100, 0.02, 0.001);
+    private final PIDController xController = new PIDController(0.2, 0.02, 0.001);
+    private final PIDController yController = new PIDController(0.2, 0.02, 0.001);
+    private final PIDController headingController = new PIDController(0.2, 0.02, 0.001);
     private final ElapsedTime timer = new ElapsedTime();
     private Path path;
     private MotionProfile profile;

@@ -28,7 +28,12 @@ public class PinpointHardware implements Hardware {
     }
 
     public Pose2D getPosition() {
-        return pinpoint == null ? null : pinpoint.getPosition();
+        Pose2D pose = null;
+        if (pinpoint != null) {
+            pinpoint.update();
+            pose = pinpoint.getPosition();
+        }
+        return pose;
     }
 
     public double getHeading() {
