@@ -79,4 +79,11 @@ public final class Constants {
         public static final GoBildaPinpointDriver.EncoderDirection PINPOINT_X_ENCODER_DIRECTION = GoBildaPinpointDriver.EncoderDirection.FORWARD;
         public static final GoBildaPinpointDriver.EncoderDirection PINPOINT_Y_ENCODER_DIRECTION = GoBildaPinpointDriver.EncoderDirection.FORWARD;
     }
+
+    public static final class Intake {
+        public static final String MOTOR = "intake";
+        public static final boolean MOTOR_REVERSED = false;
+        public static final boolean ZERO_POWER_BRAKE = false;
+        public static final double INTAKE_MOTOR_POWER = 1;
+    }
 }

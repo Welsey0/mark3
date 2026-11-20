@@ -31,6 +31,7 @@ public class MecanumTeleOp extends OpMode {
                 .withDrive()
                 .withPosition(true, false)
                 .withShooter()
+                .withIntake()
                 .build();
         robot.init();
     }
@@ -44,6 +45,10 @@ public class MecanumTeleOp extends OpMode {
             double top = shooterTop.value(gamepad1) * Constants.Shooter.INPUT_SIGN;
             double bottom = shooterBottom.value(gamepad1) * Constants.Shooter.INPUT_SIGN;
             boolean slowModeActive = slowMode.active(gamepad1);
+
+            if (gamepad1.aWasPressed()) {
+                robot.intake().toggleIntake();
+            }
 
             robot.drive().driveWithHeading(
                     dx * Constants.Drive.TELEOP_POWER_SCALE,
