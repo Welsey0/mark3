@@ -32,7 +32,7 @@ public class Autonymous extends OpMode {
     public void init() {
         robot = RobotContext.builder(hardwareMap, telemetry)
                 .withDrive()
-                .withPosition(true, false)
+                .withPosition(true, true)
                 //.withShooter()
                 .withAutoDrive()
                 .build();
@@ -46,7 +46,7 @@ public class Autonymous extends OpMode {
 
         /*switch (State) {
             case gotopollinone:*/
-                robot.autonomous().followPath(new AutoDriveSubsystem.Path(new AutoDriveSubsystem.Point(0,0), new AutoDriveSubsystem.Point(0,100), new AutoDriveSubsystem.Point(0,100), new AutoDriveSubsystem.Point(0,1000)), new AutoDriveSubsystem.MotionProfile(1,1), 3.14);
+                robot.autonomous().followPath(new AutoDriveSubsystem.Path(new AutoDriveSubsystem.Point(0,0), new AutoDriveSubsystem.Point(0,100), new AutoDriveSubsystem.Point(0,100), new AutoDriveSubsystem.Point(0,1000)), new AutoDriveSubsystem.MotionProfile(1,1), 0);
                 /*break;
         }*/
         robot.periodic();
