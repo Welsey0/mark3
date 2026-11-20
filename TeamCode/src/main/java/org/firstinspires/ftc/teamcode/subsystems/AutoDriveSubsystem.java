@@ -15,12 +15,12 @@ import org.firstinspires.ftc.teamcode.framework.RobotInitializationException;
 // Built on TheGodObject by casperwz
 
 public final class AutoDriveSubsystem implements Subsystem, TelemetrySource {
-    private static final double FEED_FORWARD = 0.025;
+    private static final double FEED_FORWARD = 0.0007;
     private final DriveSubsystem drive;
     private final PositionSubsystem position;
-    private final PIDController xController = new PIDController(-0.2, -0.02, -0.001);
-    private final PIDController yController = new PIDController(-0.2, -0.02, -0.001);
-    private final PIDController headingController = new PIDController(0.2, 0.02, 0.001);
+    private final PIDController xController = new PIDController(0.005, 0, 0.001);
+    private final PIDController yController = new PIDController(0.005, 0, 0.001);
+    private final PIDController headingController = new PIDController(0.005, 0, 0.001);
     private final ElapsedTime timer = new ElapsedTime();
     private Path path;
     private MotionProfile profile;
@@ -85,13 +85,13 @@ public final class AutoDriveSubsystem implements Subsystem, TelemetrySource {
         Point derivative = path.derivativeAt(parameter);
         double angle = Math.atan2(derivative.y, derivative.x);
         double headingError = wrap(targetHeading - heading);
-        fb = -(Math.cos(angle) * target.velocity * FEED_FORWARD
+        fb = (Math.cos(angle) * target.velocity * FEED_FORWARD
                 + xController.calculate(x, targetPoint.x));
-        lr = -(Math.sin(angle) * target.velocity * FEED_FORWARD
+        lr = (Math.sin(angle) * target.velocity * FEED_FORWARD
                 + yController.calculate(y, targetPoint.y));
         r = -headingController.calculate(heading, heading + headingError);
 
-        drive.driveWithHeading(fb, lr, r, heading);
+        drive.driveWithHeading(lr, fb, r, heading);
     }
 
     public boolean isFinished() {

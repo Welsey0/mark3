@@ -44,11 +44,12 @@ public class Autonymous extends OpMode {
 
         if (robot == null) {return;}
 
-        /*switch (State) {
-            case gotopollinone:*/
-                robot.autonomous().followPath(new AutoDriveSubsystem.Path(new AutoDriveSubsystem.Point(0,0), new AutoDriveSubsystem.Point(0,100), new AutoDriveSubsystem.Point(0,100), new AutoDriveSubsystem.Point(0,1000)), new AutoDriveSubsystem.MotionProfile(1,1), 0);
-                /*break;
-        }*/
+        switch (State) {
+            case gotopollinone:
+                robot.autonomous().followPath(new AutoDriveSubsystem.Path(new AutoDriveSubsystem.Point(0,0), new AutoDriveSubsystem.Point(333,0), new AutoDriveSubsystem.Point(666,0), new AutoDriveSubsystem.Point(1000,0)), new AutoDriveSubsystem.MotionProfile(800,800), 0);
+                State = AutoState.gotonearsideshoot;
+            break;
+        }
         robot.periodic();
     }
 
